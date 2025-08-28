@@ -1,5 +1,5 @@
 {
-  "name": "chatbbot-widget",
+  "name": "chatbot-widget",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -15,10 +15,12 @@
     "@mui/icons-material": "^7.3.1",
     "@mui/material": "^7.3.1",
     "axios": "^1.11.0",
+    "motion": "^12.23.12",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-markdown": "^10.1.0",
     "react-syntax-highlighter": "^15.6.6",
+    "react-transition-group": "^4.4.5",
     "remark-gfm": "^4.0.1"
   },
   "devDependencies": {
