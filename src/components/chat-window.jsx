@@ -1189,40 +1189,21 @@ export default function ChatWindow({ onClose, messages, setMessages }) {
                 setStreamingMessageId(currentMessageId);
               }
 
-              // Clear any existing timeout
-              if (streamingTimeoutRef.current) {
-                clearTimeout(streamingTimeoutRef.current);
-              }
-
-              // Append chunk with smooth update
-              setMessages((prev) => {
-                const updated = [...prev];
-                const lastIndex = updated.findIndex(msg => msg.id === currentMessageId);
-                if (lastIndex !== -1 && updated[lastIndex]?.sender === "bot") {
-                  updated[lastIndex] = {
-                    ...updated[lastIndex],
-                    text: updated[lastIndex].text + json.chunk,
-                    isStreaming: true,
-                  };
+              // Append chunk
+                for (const char of json.chunk) {
+                    await new Promise((resolve) => setTimeout(resolve, 0));
+                  setMessages((prev) => {
+                    const updated = [...prev];
+                    const lastIndex = updated.length - 1;
+                    if (updated[lastIndex]?.sender === "bot") {
+                      updated[lastIndex] = {
+                        ...updated[lastIndex],
+                        text: updated[lastIndex].text + char,
+                      };
+                    }
+                    return updated;
+                  });
                 }
-                return updated;
-              });
-
-              // Set timeout to mark streaming as complete after animation finishes
-              streamingTimeoutRef.current = setTimeout(() => {
-                setMessages((prev) => {
-                  const updated = [...prev];
-                  const messageIndex = updated.findIndex(msg => msg.id === currentMessageId);
-                  if (messageIndex !== -1) {
-                    updated[messageIndex] = {
-                      ...updated[messageIndex],
-                      isStreaming: false,
-                    };
-                  }
-                  return updated;
-                });
-                setStreamingMessageId(null);
-              }, 1500); // Longer pause to let character animation finish
             }
           } catch (e) {
             console.error("Failed to parse chunk:", line, e);
