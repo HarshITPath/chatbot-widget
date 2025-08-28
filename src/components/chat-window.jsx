@@ -312,17 +312,20 @@ export default function ChatWindow({ onClose, messages, setMessages }) {
               }
 
               // Append chunk
-              setMessages((prev) => {
-                const updated = [...prev];
-                const lastIndex = updated.length - 1;
-                if (updated[lastIndex]?.sender === "bot") {
-                  updated[lastIndex] = {
-                    ...updated[lastIndex],
-                    text: updated[lastIndex].text + json.chunk,
-                  };
+                for (const char of json.chunk) {
+                    await new Promise((resolve) => setTimeout(resolve, 0));
+                  setMessages((prev) => {
+                    const updated = [...prev];
+                    const lastIndex = updated.length - 1;
+                    if (updated[lastIndex]?.sender === "bot") {
+                      updated[lastIndex] = {
+                        ...updated[lastIndex],
+                        text: updated[lastIndex].text + char,
+                      };
+                    }
+                    return updated;
+                  });
                 }
-                return updated;
-              });
             }
           } catch (e) {
             console.error("Failed to parse chunk:", line, e);
