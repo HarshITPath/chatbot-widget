@@ -6,24 +6,24 @@ import App from './App.jsx';
 
 // Default widget configuration
 const defaultConfig = {
-  apiUrl: 'http://192.168.0.39:3000/api',
-  primaryColor: '#1976d2',
-  secondaryColor: '#dc004e',
-  botName: 'IT Path Assistant',
-  botAvatar: '🤖',
-  userAvatar: '👤',
-  position: 'bottom-right',
-  zIndex: 1300,
-  greeting: 'Hi! 👋 How can I help you today?',
-  placeholder: 'Type your message...',
+  apiUrl: import.meta.env.VITE_API_URL || 'http://192.168.0.39:3000/api',
+  primaryColor: import.meta.env.VITE_PRIMARY_COLOR || '#1976d2',
+  secondaryColor: import.meta.env.VITE_SECONDARY_COLOR || '#dc004e',
+  botName: import.meta.env.VITE_BOT_NAME || 'IT Path Assistant',
+  botAvatar: import.meta.env.VITE_BOT_AVATAR || '🤖',
+  userAvatar: import.meta.env.VITE_USER_AVATAR || '👤',
+  position: import.meta.env.VITE_POSITION || 'bottom-right',
+  zIndex: parseInt(import.meta.env.VITE_Z_INDEX) || 1300,
+  greeting: import.meta.env.VITE_GREETING || 'Hi! 👋 How can I help you today?',
+  placeholder: import.meta.env.VITE_PLACEHOLDER || 'Type your message...',
   windowSize: {
     width: { xs: 'calc(100vw - 16px)', sm: 'min(90vw, 540px)', md: 'min(50vw, 650px)' },
     height: { xs: 'calc(100vh - 32px)', sm: 'min(90vh, 720px)', md: 'min(85vh, 750px)' }
   },
-  buttonSize: 64,
-  borderRadius: 3,
-  shadow: '0 8px 32px rgba(0,0,0,0.12)',
-  fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif'
+  buttonSize: parseInt(import.meta.env.VITE_BUTTON_SIZE) || 64,
+  borderRadius: parseInt(import.meta.env.VITE_BORDER_RADIUS) || 3,
+  shadow: import.meta.env.VITE_SHADOW || '0 8px 32px rgba(0,0,0,0.12)',
+  fontFamily: import.meta.env.VITE_FONT_FAMILY || '"Roboto", "Helvetica", "Arial", sans-serif'
 };
 
 // Widget class for managing the chatbot instance

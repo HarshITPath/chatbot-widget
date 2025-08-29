@@ -1,0 +1,13 @@
+{
+  "name": "deploy-vercel",
+  "scripts": {
+    "vercel:setup": "npm install -g vercel",
+    "vercel:login": "vercel login",
+    "vercel:dev": "vercel dev",
+    "vercel:deploy": "vercel --prod",
+    "deploy:staging": "vercel --target staging",
+    "deploy:prod": "npm run build && vercel --prod",
+    "env:copy": "cp .env.example .env.local",
+    "env:setup": "echo Please edit .env.local with your configuration"
+  }
+}

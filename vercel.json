@@ -10,6 +10,22 @@
       }
     }
   ],
+  "env": {
+    "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "VITE_API_URL": "@vite_api_url",
+      "VITE_PRIMARY_COLOR": "@vite_primary_color",
+      "VITE_SECONDARY_COLOR": "@vite_secondary_color",
+      "VITE_BOT_NAME": "@vite_bot_name",
+      "VITE_BOT_AVATAR": "@vite_bot_avatar",
+      "VITE_USER_AVATAR": "@vite_user_avatar",
+      "VITE_GREETING": "@vite_greeting",
+      "VITE_PLACEHOLDER": "@vite_placeholder",
+      "VITE_POSITION": "@vite_position"
+    }
+  },
   "routes": [
     {
       "src": "/widget/(.*)",

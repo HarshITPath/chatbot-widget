@@ -116,15 +116,15 @@ ChatbotWidget.init({
         function initWidget() {
             try {
                 ChatbotWidget.init({
-                    apiUrl: 'http://192.168.0.39:3000/api',
-                    primaryColor: '#28a745',
-                    secondaryColor: '#17a2b8',
-                    botName: 'Test Assistant',
-                    botAvatar: '🚀',
-                    userAvatar: '👨‍💻',
-                    greeting: 'Hello! This is a test of the chatbot widget.',
-                    placeholder: 'Type your test message here...',
-                    position: 'bottom-right'
+                    apiUrl: 'VITE_API_URL_PLACEHOLDER',
+                    primaryColor: 'VITE_PRIMARY_COLOR_PLACEHOLDER',
+                    secondaryColor: 'VITE_SECONDARY_COLOR_PLACEHOLDER',
+                    botName: 'VITE_BOT_NAME_PLACEHOLDER',
+                    botAvatar: 'VITE_BOT_AVATAR_PLACEHOLDER',
+                    userAvatar: 'VITE_USER_AVATAR_PLACEHOLDER',
+                    greeting: 'VITE_GREETING_PLACEHOLDER',
+                    placeholder: 'VITE_PLACEHOLDER_PLACEHOLDER',
+                    position: 'VITE_POSITION_PLACEHOLDER'
                 });
                 updateStatus('✅ Widget initialized successfully! Look for the chat button.', 'success');
             } catch (error) {

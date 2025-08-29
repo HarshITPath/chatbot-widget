@@ -6,6 +6,8 @@
   "scripts": {
     "build:widget": "vite build --config vite.widget.config.js",
     "build": "npm run build:widget && node build.js",
+    "build:dev": "NODE_ENV=development npm run build",
+    "build:prod": "NODE_ENV=production npm run build",
     "test:widget": "vite preview --outDir dist/widget --port 3001",
     "dev": "vite",
     "lint": "eslint .",
