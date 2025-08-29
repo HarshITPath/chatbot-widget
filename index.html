@@ -1,13 +1,362 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Widget - Live Demo & CDN</title>
+    <meta name="description" content="Embeddable chatbot widget - Test the live demo and get the CDN link for your website">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .card h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Fira Code', 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+        
+        .highlight {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .button:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+        
+        .button.secondary {
+            background: #6c757d;
+        }
+        
+        .button.secondary:hover {
+            background: #545b62;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .feature-list li:before {
+            content: "✅ ";
+            margin-right: 10px;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: 600;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            padding: 20px;
+            opacity: 0.8;
+        }
+        
+        .url-display {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 16px;
+            word-break: break-all;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 Chatbot Widget</h1>
+            <p>Embeddable AI chatbot for any website - Live demo and CDN hosting</p>
+        </div>
+        
+        <div class="content">
+            <div class="card">
+                <h2>🚀 Live Demo</h2>
+                <p>The chatbot widget is running live on this page! Look for the chat button in the bottom-right corner.</p>
+                
+                <div class="highlight">
+                    <strong>Try it now:</strong> Click the chat button to test the widget functionality.
+                </div>
+                
+                <h3>Features:</h3>
+                <ul class="feature-list">
+                    <li>Real-time AI chat responses</li>
+                    <li>Fully responsive design</li>
+                    <li>Customizable appearance</li>
+                    <li>Easy integration</li>
+                    <li>No dependencies required</li>
+                </ul>
+                
+                <div id="demo-status" class="status success">
+                    ✅ Widget is live and ready to test!
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📦 CDN Integration</h2>
+                <p>Use our hosted CDN to add the widget to your website instantly:</p>
+                
+                <div class="code-block">
+&lt;!-- Add to your website --&gt;
+&lt;script src="<span id="cdn-url">Loading...</span>"&gt;&lt;/script&gt;
+&lt;script&gt;
+  ChatbotWidget.init({
+    apiUrl: 'YOUR_API_ENDPOINT',
+    primaryColor: '#your-brand-color',
+    botName: 'Your Assistant'
+  });
+&lt;/script&gt;
+                </div>
+                
+                <button class="button" onclick="copyToClipboard()">📋 Copy Integration Code</button>
+                <a href="./widget/chatbot-widget.umd.js" class="button secondary" download>⬇️ Download Widget</a>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>⚙️ Configuration Options</h2>
+            <p>Customize the widget to match your brand:</p>
+            
+            <div class="code-block">
+ChatbotWidget.init({
+  // Required
+  apiUrl: 'https://your-api.com/api',
+  
+  // Appearance
+  primaryColor: '#1976d2',      // Main theme color
+  secondaryColor: '#dc004e',    // Secondary color
+  botName: 'Your Assistant',    // Bot name
+  botAvatar: '🤖',             // Bot avatar
+  userAvatar: '👤',            // User avatar
+  
+  // Position & Behavior
+  position: 'bottom-right',     // Widget position
+  greeting: 'Hi! How can I help?',
+  placeholder: 'Type your message...',
+  
+  // Advanced
+  buttonSize: 64,              // Button size in pixels
+  zIndex: 1300,                // CSS z-index
+  fontFamily: '"Roboto", sans-serif'
+});
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>🔧 API Methods</h2>
+            <p>Control the widget programmatically:</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin: 20px 0;">
+                <button class="button" onclick="testShow()">Show Widget</button>
+                <button class="button" onclick="testHide()">Hide Widget</button>
+                <button class="button" onclick="changeTheme()">Change Theme</button>
+                <button class="button secondary" onclick="testDestroy()">Destroy Widget</button>
+            </div>
+            
+            <div class="code-block">
+// Available methods
+ChatbotWidget.show();           // Show widget
+ChatbotWidget.hide();           // Hide widget
+ChatbotWidget.updateConfig({    // Update configuration
+  primaryColor: '#new-color'
+});
+ChatbotWidget.destroy();        // Remove widget
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>🌟 Ready to integrate? Copy the CDN link above and add it to your website!</p>
+            <p>📚 <a href="https://github.com/HarshITPath/chatbot-widget" style="color: white;">View Documentation on GitHub</a></p>
+        </div>
+    </div>
+
+    <!-- Load the chatbot widget -->
+    <script src="./widget/chatbot-widget.umd.js"></script>
+    <script>
+        // Set CDN URL dynamically
+        document.addEventListener('DOMContentLoaded', function() {
+            const cdnUrl = window.location.origin + '/widget/chatbot-widget.umd.js';
+            document.getElementById('cdn-url').textContent = cdnUrl;
+        });
+        
+        // Initialize the widget
+        ChatbotWidget.init({
+            apiUrl: 'http://192.168.0.39:3000/api',
+            primaryColor: '#667eea',
+            secondaryColor: '#764ba2',
+            botName: 'Demo Assistant',
+            botAvatar: '🚀',
+            userAvatar: '👨‍💼',
+            greeting: 'Hello! Welcome to our chatbot widget demo. How can I assist you today?',
+            placeholder: 'Type your message here...',
+            position: 'bottom-right'
+        });
+        
+        // Copy integration code to clipboard
+        function copyToClipboard() {
+            const cdnUrl = window.location.origin + '/widget/chatbot-widget.umd.js';
+            const code = `<script src="${cdnUrl}"></script>
+<script>
+  ChatbotWidget.init({
+    apiUrl: 'YOUR_API_ENDPOINT',
+    primaryColor: '#your-brand-color',
+    botName: 'Your Assistant'
+  });
+</script>`;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                alert('Integration code copied to clipboard!');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = code;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Integration code copied to clipboard!');
+            });
+        }
+        
+        // Demo controls
+        function testShow() {
+            ChatbotWidget.show();
+            updateStatus('✅ Widget shown');
+        }
+        
+        function testHide() {
+            ChatbotWidget.hide();
+            updateStatus('✅ Widget hidden');
+        }
+        
+        function changeTheme() {
+            const colors = ['#e74c3c', '#9b59b6', '#3498db', '#1abc9c', '#f39c12', '#667eea'];
+            const randomColor = colors[Math.floor(Math.random() * colors.length)];
+            ChatbotWidget.updateConfig({ 
+                primaryColor: randomColor,
+                botName: 'Themed Bot'
+            });
+            updateStatus(`✅ Theme changed to ${randomColor}`);
+        }
+        
+        function testDestroy() {
+            ChatbotWidget.destroy();
+            updateStatus('✅ Widget destroyed - refresh page to restore');
+        }
+        
+        function updateStatus(message) {
+            const status = document.getElementById('demo-status');
+            status.textContent = message;
+            status.className = 'status success';
+        }
+    </script>
+</body>
 </html>

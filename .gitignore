@@ -10,9 +10,17 @@ lerna-debug.log*
 package-lock.json
 
 node_modules
-dist
 dist-ssr
 *.local
+
+# Keep widget distribution but ignore other builds
+dist/
+!dist/widget/
+!dist/widget/chatbot-widget.umd.js
+
+# Temporary files
+*.tmp
+*.temp
 
 # Editor directories and files
 .vscode/*

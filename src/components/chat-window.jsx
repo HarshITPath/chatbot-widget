@@ -13,7 +13,6 @@ import {
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { ICONS } from "../assets/icons";
-import { BASE_URL } from "../utils/constant";
 
 // Enhanced component to render different types of bot responses with improved spacing
 const BotMessage = ({ message }) => {
@@ -259,11 +258,24 @@ const BotMessage = ({ message }) => {
   );
 };
 
-export default function ChatWindow({ onClose, messages, setMessages }) {
+export default function ChatWindow({ onClose, messages, setMessages, config }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [hasFirstChunk, setHasFirstChunk] = useState(false); // track first chunk
   const messagesEndRef = useRef(null);
+
+  // Get configuration values with defaults
+  const apiUrl = config?.apiUrl || "http://192.168.0.39:3000/api";
+  const botName = config?.botName || "IT Path Assistant";
+  const botAvatar = config?.botAvatar || "🤖";
+  const userAvatar = config?.userAvatar || "👤";
+  const placeholder = config?.placeholder || "Type your message...";
+  const windowSize = config?.windowSize || {
+    width: { xs: 'calc(100vw - 16px)', sm: 'min(90vw, 540px)', md: 'min(50vw, 650px)' },
+    height: { xs: 'calc(100vh - 32px)', sm: 'min(90vh, 720px)', md: 'min(85vh, 750px)' }
+  };
+  const borderRadius = config?.borderRadius || 3;
+  const shadow = config?.shadow || "0 8px 32px rgba(0,0,0,0.12)";
 
   const sendMessage = async () => {
     if (!input.trim()) return;
@@ -277,7 +289,7 @@ export default function ChatWindow({ onClose, messages, setMessages }) {
     setHasFirstChunk(false);
 
     try {
-      const res = await fetch(`${BASE_URL}/ask`, {
+      const res = await fetch(`${apiUrl}/ask`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question, useStreaming: true }),
@@ -355,26 +367,14 @@ export default function ChatWindow({ onClose, messages, setMessages }) {
         bottom: 20,
         right: 20,
         left: { xs: 10, sm: "auto" },
-        width: {
-          xs: "calc(100vw - 16px)",
-          sm: "min(90vw, 540px)",
-          md: "min(50vw, 650px)",
-          lg: "min(45vw, 720px)",
-          xl: "min(40vw, 800px)",
-        },
-        height: {
-          xs: "calc(100vh - 32px)",
-          sm: "min(90vh, 720px)",
-          md: "min(85vh, 750px)",
-          lg: "min(80vh, 800px)",
-          xl: "min(75vh, 850px)",
-        },
+        width: windowSize.width,
+        height: windowSize.height,
         display: "flex",
         flexDirection: "column",
-        borderRadius: { xs: 2, sm: 3 },
+        borderRadius: borderRadius,
         overflow: "hidden",
-        zIndex: 1300,
-        boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+        zIndex: config?.zIndex || 1300,
+        boxShadow: shadow,
         border: "1px solid",
         borderColor: "grey.200",
       }}
@@ -387,10 +387,10 @@ export default function ChatWindow({ onClose, messages, setMessages }) {
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Avatar sx={{ bgcolor: "rgba(255,255,255,0.2)", width: 32, height: 32, fontSize: "1.2rem" }}>
-              🤖
+              {botAvatar}
             </Avatar>
             <Typography variant="subtitle1" sx={{ fontWeight: 600, lineHeight: 1.2 }}>
-              IT Path Assistant
+              {botName}
             </Typography>
           </Box>
           <IconButton
@@ -428,7 +428,7 @@ export default function ChatWindow({ onClose, messages, setMessages }) {
             >
               {msg.sender === "bot" && (
                 <Avatar sx={{ width: 28, height: 28, bgcolor: "primary.main", fontSize: "0.8rem", mt: 0.5 }}>
-                  🤖
+                  {botAvatar}
                 </Avatar>
               )}
               <Box
@@ -453,7 +453,7 @@ export default function ChatWindow({ onClose, messages, setMessages }) {
               </Box>
               {msg.sender === "user" && (
                 <Avatar sx={{ width: 28, height: 28, bgcolor: "secondary.main", fontSize: "0.8rem", mt: 0.5 }}>
-                  👤
+                  {userAvatar}
                 </Avatar>
               )}
             </Box>
@@ -462,7 +462,9 @@ export default function ChatWindow({ onClose, messages, setMessages }) {
           {/* Loading fallback UI */}
           {loading && !hasFirstChunk && (
             <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1, mb: 2 }}>
-              <Avatar sx={{ width: 28, height: 28, bgcolor: "primary.main", fontSize: "0.8rem" }}>🤖</Avatar>
+              <Avatar sx={{ width: 28, height: 28, bgcolor: "primary.main", fontSize: "0.8rem" }}>
+                {botAvatar}
+              </Avatar>
               <Box
                 sx={{
                   bgcolor: "background.paper",
@@ -509,7 +511,7 @@ export default function ChatWindow({ onClose, messages, setMessages }) {
         <TextareaAutosize
           minRows={1}
           maxRows={4}
-          placeholder="Type your message..."
+          placeholder={placeholder}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -526,6 +528,7 @@ export default function ChatWindow({ onClose, messages, setMessages }) {
             resize: "none",
             outline: "none",
             fontSize: "14px",
+            fontFamily: config?.fontFamily || '"Roboto", "Helvetica", "Arial", sans-serif',
           }}
         />
         <IconButton
