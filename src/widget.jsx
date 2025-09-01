@@ -26,103 +26,108 @@ const defaultConfig = {
   fontFamily: import.meta.env.VITE_FONT_FAMILY || '"Roboto", "Helvetica", "Arial", sans-serif'
 };
 
-// Widget class for managing the chatbot instance
-class ChatbotWidgetClass {
-  constructor(config = {}) {
-    this.config = { ...defaultConfig, ...config };
-    this.isInitialized = false;
-    this.container = null;
-    this.root = null;
-  }
+// Functional widget manager with module-level state
+const state = {
+  config: { ...defaultConfig },
+  isInitialized: false,
+  container: null,
+  root: null,
+};
 
-  // Initialize the widget
-  init() {
-    if (this.isInitialized) {
-      console.warn('Chatbot widget is already initialized');
-      return;
-    }
+// Render the React component with theme
+function renderWidget() {
+  if (!state.root) return;
 
-    // Create container element
-    this.container = document.createElement('div');
-    this.container.id = 'chatbot-widget-container';
-    this.container.style.cssText = `
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: ${this.config.zIndex};
-    `;
-
-    // Add container to body
-    document.body.appendChild(this.container);
-
-    // Create React root and render
-    this.root = createRoot(this.container);
-    this.render();
-
-    this.isInitialized = true;
-  }
-
-  // Render the React component with theme
-  render() {
-    const theme = createTheme({
-      palette: {
-        primary: {
-          main: this.config.primaryColor,
-        },
-        secondary: {
-          main: this.config.secondaryColor,
-        },
+  const theme = createTheme({
+    palette: {
+      primary: {
+        main: state.config.primaryColor,
       },
-      typography: {
-        fontFamily: this.config.fontFamily,
+      secondary: {
+        main: state.config.secondaryColor,
       },
-    });
+    },
+    typography: {
+      fontFamily: state.config.fontFamily,
+    },
+  });
 
-    this.root.render(
-      React.createElement(ThemeProvider, { theme },
-        React.createElement(CssBaseline),
-        React.createElement(ChatbotWidgetComponent, { config: this.config })
-      )
-    );
+  state.root.render(
+    React.createElement(ThemeProvider, { theme },
+      React.createElement(CssBaseline),
+      React.createElement(ChatbotWidgetComponent, { config: state.config })
+    )
+  );
+}
+
+// Initialize the widget
+function initWidget(config = {}) {
+  if (state.isInitialized) {
+    console.warn('Chatbot widget is already initialized');
+    return;
   }
 
-  // Update configuration
-  updateConfig(newConfig) {
-    this.config = { ...this.config, ...newConfig };
-    if (this.isInitialized) {
-      this.render();
-    }
-  }
+  state.config = { ...defaultConfig, ...config };
 
-  // Show the widget
-  show() {
-    if (this.container) {
-      this.container.style.display = 'block';
-    }
-  }
+  if (typeof document === 'undefined') return;
 
-  // Hide the widget
-  hide() {
-    if (this.container) {
-      this.container.style.display = 'none';
-    }
-  }
+  // Create container element
+  const container = document.createElement('div');
+  container.id = 'chatbot-widget-container';
+  container.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: ${state.config.zIndex};
+  `;
 
-  // Destroy the widget
-  destroy() {
-    if (this.root) {
-      this.root.unmount();
-    }
-    if (this.container && this.container.parentNode) {
-      this.container.parentNode.removeChild(this.container);
-    }
-    this.isInitialized = false;
-    this.container = null;
-    this.root = null;
+  // Add container to body
+  document.body.appendChild(container);
+  state.container = container;
+
+  // Create React root and render
+  state.root = createRoot(container);
+  renderWidget();
+
+  state.isInitialized = true;
+}
+
+// Update configuration
+function updateConfigWidget(newConfig) {
+  state.config = { ...state.config, ...newConfig };
+  if (state.isInitialized) {
+    renderWidget();
   }
+}
+
+// Show the widget
+function showWidget() {
+  if (state.container) {
+    state.container.style.display = 'block';
+  }
+}
+
+// Hide the widget
+function hideWidget() {
+  if (state.container) {
+    state.container.style.display = 'none';
+  }
+}
+
+// Destroy the widget
+function destroyWidget() {
+  if (state.root) {
+    state.root.unmount();
+  }
+  if (state.container && state.container.parentNode) {
+    state.container.parentNode.removeChild(state.container);
+  }
+  state.isInitialized = false;
+  state.container = null;
+  state.root = null;
 }
 
 // React component wrapper that passes config to App
@@ -133,17 +138,29 @@ function ChatbotWidgetComponent({ config }) {
   );
 }
 
-// Global widget instance
+// Global widget instance (facade over functional manager)
 let chatbotInstance = null;
+
+const instanceFacade = {
+  init: initWidget,
+  updateConfig: updateConfigWidget,
+  show: showWidget,
+  hide: hideWidget,
+  destroy: destroyWidget,
+  get config() { return state.config; },
+  get isInitialized() { return state.isInitialized; },
+  get container() { return state.container; },
+  get root() { return state.root; },
+};
 
 // Widget API object
 const ChatbotWidget = {
   // Initialize the widget
   init: (config = {}) => {
     if (!chatbotInstance) {
-      chatbotInstance = new ChatbotWidgetClass(config);
+      chatbotInstance = instanceFacade;
     }
-    chatbotInstance.init();
+    initWidget(config);
     return chatbotInstance;
   },
 
@@ -153,7 +170,7 @@ const ChatbotWidget = {
   // Update configuration
   updateConfig: (config) => {
     if (chatbotInstance) {
-      chatbotInstance.updateConfig(config);
+      updateConfigWidget(config);
     } else {
       console.warn('Widget not initialized. Call ChatbotWidget.init() first.');
     }
@@ -162,21 +179,21 @@ const ChatbotWidget = {
   // Show widget
   show: () => {
     if (chatbotInstance) {
-      chatbotInstance.show();
+      showWidget();
     }
   },
 
   // Hide widget
   hide: () => {
     if (chatbotInstance) {
-      chatbotInstance.hide();
+      hideWidget();
     }
   },
 
   // Destroy widget
   destroy: () => {
     if (chatbotInstance) {
-      chatbotInstance.destroy();
+      destroyWidget();
       chatbotInstance = null;
     }
   }
