@@ -1,31 +1,27 @@
-import React from 'react';
-import { Box, Typography, Alert } from '@mui/material';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { 
-  parseAIResponse, 
-  CONTENT_TYPES, 
+import React from "react";
+import { Box, Typography, Alert } from "@mui/material";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import {
+  parseAIResponse,
+  CONTENT_TYPES,
   validateComponentData,
-  getComponentDisplayName
-} from '../utils/ai-response-parser';
-import { 
-  AI_COMPONENT_REGISTRY, 
+  getComponentDisplayName,
+} from "../utils/ai-response-parser";
+import {
   getAIComponent,
-  isComponentTypeSupported 
-} from './ai-components';
+} from "./ai-components";
 
-/**
- * Unknown Component - Fallback for unsupported component types
- */
+//  Unknown Component - Fallback for unsupported component types
 const UnknownComponent = ({ data, componentType }) => {
   // All components now use InfoCard, so this should rarely be needed
-  const InfoCardComponent = getAIComponent('info_card');
-  
+  const InfoCardComponent = getAIComponent("info_card");
+
   if (InfoCardComponent && data) {
     console.warn(`Unknown component type "${componentType}", using InfoCard`);
     return <InfoCardComponent data={data} componentType="info_card" />;
   }
-  
+
   return (
     <Alert severity="info" sx={{ mb: 2 }}>
       <Typography variant="subtitle2" sx={{ mb: 1 }}>
@@ -38,9 +34,7 @@ const UnknownComponent = ({ data, componentType }) => {
   );
 };
 
-/**
- * Renders a single parsed content item
- */
+// Renders a single parsed content item
 const ContentRenderer = ({ item, config = {} }) => {
   const { type, content, componentType, data, id } = item;
 
@@ -49,13 +43,13 @@ const ContentRenderer = ({ item, config = {} }) => {
     case CONTENT_TYPES.TEXT:
       return (
         <Box key={id} sx={{ mb: 1 }}>
-          <Typography 
-            variant="body2" 
-            sx={{ 
+          <Typography
+            variant="body2"
+            sx={{
               lineHeight: 1.5,
               fontSize: "0.875rem",
               whiteSpace: "pre-wrap",
-              color: "text.primary"
+              color: "text.primary",
             }}
           >
             {content}
@@ -170,7 +164,11 @@ const ContentRenderer = ({ item, config = {} }) => {
                 <Typography
                   component="li"
                   variant="body2"
-                  sx={{ fontSize: "0.875rem", lineHeight: 1.4, color: "text.primary" }}
+                  sx={{
+                    fontSize: "0.875rem",
+                    lineHeight: 1.4,
+                    color: "text.primary",
+                  }}
                 >
                   {children}
                 </Typography>
@@ -188,7 +186,10 @@ const ContentRenderer = ({ item, config = {} }) => {
                     fontWeight: 500,
                     borderBottom: "1px solid transparent",
                     transition: "all 0.2s ease",
-                    "&:hover": { borderBottomColor: "primary.main", color: "primary.dark" },
+                    "&:hover": {
+                      borderBottomColor: "primary.main",
+                      color: "primary.dark",
+                    },
                   }}
                 >
                   {children}
@@ -245,12 +246,65 @@ const ContentRenderer = ({ item, config = {} }) => {
                       fontFamily: '"Fira Code", "Consolas", monospace',
                       border: "1px solid",
                       borderColor: "grey.700",
-                      "& code": { bgcolor: "transparent", p: 0, fontSize: "inherit", fontFamily: "inherit" },
+                      "& code": {
+                        bgcolor: "transparent",
+                        p: 0,
+                        fontSize: "inherit",
+                        fontFamily: "inherit",
+                      },
                     }}
                   >
                     <code>{children}</code>
                   </Box>
                 ),
+              table: ({ children }) => (
+                <Box sx={{ overflowX: "auto", my: 1.5 }}>
+                  <Box
+                    component="table"
+                    sx={{
+                      width: "100%",
+                      borderCollapse: "collapse",
+                      border: "1px solid",
+                      borderColor: "grey.300",
+                      fontSize: "0.85rem",
+                    }}
+                  >
+                    {children}
+                  </Box>
+                </Box>
+              ),
+              thead: ({ children }) => (
+                <Box
+                  component="thead"
+                  sx={{
+                    bgcolor: "grey.100",
+                    "& th": {
+                      border: "1px solid",
+                      borderColor: "grey.300",
+                      p: 1,
+                      fontWeight: 600,
+                      textAlign: "left",
+                    },
+                  }}
+                >
+                  {children}
+                </Box>
+              ),
+              tbody: ({ children }) => (
+                <Box
+                  component="tbody"
+                  sx={{
+                    "& td": {
+                      border: "1px solid",
+                      borderColor: "grey.300",
+                      p: 1,
+                    },
+                    "& tr:nth-of-type(even)": { bgcolor: "grey.50" },
+                  }}
+                >
+                  {children}
+                </Box>
+              ),
             }}
           >
             {content}
@@ -287,12 +341,13 @@ const ContentRenderer = ({ item, config = {} }) => {
       }
 
       // Get the InfoCard component (since all components now use InfoCard)
-      const ComponentToRender = getAIComponent(componentType) || UnknownComponent;
-      
+      const ComponentToRender =
+        getAIComponent(componentType) || UnknownComponent;
+
       return (
         <Box key={id} sx={{ mb: 2 }}>
-          <ComponentToRender 
-            data={data} 
+          <ComponentToRender
+            data={data}
             componentType={componentType}
             config={config}
           />
@@ -308,48 +363,40 @@ const ContentRenderer = ({ item, config = {} }) => {
   }
 };
 
-/**
- * Main AI Response Renderer Component
- * Parses and renders AI responses with mixed content and components
- */
+//  Main AI Response Renderer Component Parses and renders AI responses with mixed content and components
 export const AIResponseRenderer = ({ message, config = {} }) => {
-  // Parse the AI response
   const parsedContent = parseAIResponse(message);
 
   // If parsing returns empty array, fall back to simple text
   if (!parsedContent || parsedContent.length === 0) {
     return (
-      <Typography 
-        variant="body2" 
-        sx={{ 
+      <Typography
+        variant="body2"
+        sx={{
           lineHeight: 1.5,
           fontSize: "0.875rem",
           whiteSpace: "pre-wrap",
-          color: "text.primary"
+          color: "text.primary",
         }}
       >
-        {message || 'No content to display'}
+        {message || "No content to display"}
       </Typography>
     );
   }
 
   // Render all parsed content items
   return (
-    <Box sx={{ "& > *:first-of-type": { mt: 0 }, "& > *:last-child": { mb: 0 } }}>
+    <Box
+      sx={{ "& > *:first-of-type": { mt: 0 }, "& > *:last-child": { mb: 0 } }}
+    >
       {parsedContent.map((item) => (
-        <ContentRenderer 
-          key={item.id} 
-          item={item} 
-          config={config}
-        />
+        <ContentRenderer key={item.id} item={item} config={config} />
       ))}
     </Box>
   );
 };
 
-/**
- * Hook for parsing AI responses (useful for getting parsed data without rendering)
- */
+//  Hook for parsing AI responses (useful for getting parsed data without rendering)
 export const useAIResponseParser = (message) => {
   return React.useMemo(() => {
     if (!message) return [];
