@@ -111,13 +111,13 @@ export const InfoCard = ({ data, componentType, config = {} }) => {
         buttonColor: theme.palette.primary.main
       },
       job: {
-        color: theme.palette.secondary.main,
+        color: theme.palette.primary.main,
           bgColor: `${theme.palette.primary.main}08`,
           borderColor: theme.palette.primary.main,
         icon: <WorkIcon sx={{ fontSize: 18 }} />,
         label: 'Job Opening',
         buttonText: 'Apply Now',
-        buttonColor: theme.palette.secondary.main
+        buttonColor: theme.palette.primary.main
       },
       testimonial: {
           color: theme.palette.primary.main,
