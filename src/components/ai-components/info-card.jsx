@@ -138,13 +138,13 @@ export const InfoCard = ({ data, componentType, config = {} }) => {
         buttonColor: theme.palette.primary.main
       },
       contact: {
-        color: theme.palette.warning.main,
-        bgColor: `${theme.palette.warning.main}08`,
-        borderColor: theme.palette.warning.main,
+        color: theme.palette.primary.main,
+        bgColor: `${theme.palette.primary.main}08`,
+        borderColor: theme.palette.primary.main,
         icon: <EmailIcon sx={{ fontSize: 18 }} />,
         label: 'Contact Info',
         buttonText: 'Get In Touch',
-        buttonColor: theme.palette.warning.main
+        buttonColor: theme.palette.primary.main
       },
       portfolio: {
           color: theme.palette.primary.main,
