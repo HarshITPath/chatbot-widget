@@ -6,7 +6,6 @@ import {
   Box,
   Chip,
   Button,
-  Avatar,
   Rating,
   Link as MuiLink,
   Divider,
@@ -32,11 +31,7 @@ import {
   Folder as PortfolioIcon
 } from '@mui/icons-material';
 
-/**
- * Universal Info Card Component
- * Dynamically renders different card types based on the key-value structure
- */
-export const InfoCard = ({ data, componentType, config = {} }) => {
+export const InfoCard = ({ data }) => {
   const theme = useTheme();
   
   if (!data) {
@@ -355,18 +350,11 @@ export const InfoCard = ({ data, componentType, config = {} }) => {
       variant="outlined" 
       sx={{ 
         mb: 2, 
-        borderRadius: 3,
+        borderRadius: 1.5,
         border: `1px solid ${theme.palette.divider}`,
-        backgroundColor: theme.palette.background.paper,
-        boxShadow: theme.shadows[1],
-        transition: 'all 0.2s ease-in-out',
-        '&:hover': {
-          boxShadow: theme.shadows[4],
-          borderColor: typeConfig.color
-        }
       }}
     >
-      <CardContent sx={{ p: 3 }}>
+      <CardContent sx={{ p: 2 }}>
         {/* Type Badge */}
         <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
           <Chip
@@ -390,11 +378,9 @@ export const InfoCard = ({ data, componentType, config = {} }) => {
         {/* Title */}
         {title && (
           <Typography 
-            variant="h6" 
+            variant="body2" 
             sx={{ 
               fontWeight: 600, 
-              fontSize: '1.1rem',
-              lineHeight: 1.4,
               color: theme.palette.text.primary,
               mb: 1.5
             }}
@@ -443,17 +429,13 @@ export const InfoCard = ({ data, componentType, config = {} }) => {
                     )}
                     <Box flex={1}>
                       <Typography 
-                        variant="body2" 
-                        component="span"
-                        fontWeight={600} 
-                        color="text.primary"
-                        sx={{ fontSize: '0.85rem', mr: 1 }}
+                        variant="subtitle1" 
                       >
                         {field.key}:
                       </Typography>
-                      <Box component="span" sx={{ fontSize: '0.85rem' }}>
+                      <Typography variant='subtitle2'>
                         {renderFieldValue(field)}
-                      </Box>
+                      </Typography>
                     </Box>
                   </Box>
                 );
@@ -478,7 +460,7 @@ export const InfoCard = ({ data, componentType, config = {} }) => {
               py: 1,
               fontSize: '0.875rem',
               textTransform: 'none',
-              borderRadius: 2,
+              borderRadius: 1,
               '&:hover': {
                 backgroundColor: typeConfig.buttonColor,
                 filter: 'brightness(0.9)'
