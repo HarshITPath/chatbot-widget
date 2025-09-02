@@ -5,7 +5,6 @@ import remarkGfm from 'remark-gfm';
 import { 
   parseAIResponse, 
   CONTENT_TYPES, 
-  COMPONENT_TYPES,
   validateComponentData,
   getComponentDisplayName
 } from '../utils/ai-response-parser';
@@ -19,13 +18,21 @@ import {
  * Unknown Component - Fallback for unsupported component types
  */
 const UnknownComponent = ({ data, componentType }) => {
+  // All components now use InfoCard, so this should rarely be needed
+  const InfoCardComponent = getAIComponent('info_card');
+  
+  if (InfoCardComponent && data) {
+    console.warn(`Unknown component type "${componentType}", using InfoCard`);
+    return <InfoCardComponent data={data} componentType="info_card" />;
+  }
+  
   return (
-    <Alert severity="warning" sx={{ mb: 2 }}>
+    <Alert severity="info" sx={{ mb: 2 }}>
       <Typography variant="subtitle2" sx={{ mb: 1 }}>
-        Unsupported Component: {componentType}
+        Component: {componentType}
       </Typography>
       <Typography variant="body2" color="text.secondary">
-        This component type is not yet implemented. Available types: {Object.keys(AI_COMPONENT_REGISTRY).join(', ')}
+        Using universal InfoCard component for rendering.
       </Typography>
     </Alert>
   );
@@ -279,7 +286,7 @@ const ContentRenderer = ({ item, config = {} }) => {
         );
       }
 
-      // Get the appropriate component from registry
+      // Get the InfoCard component (since all components now use InfoCard)
       const ComponentToRender = getAIComponent(componentType) || UnknownComponent;
       
       return (

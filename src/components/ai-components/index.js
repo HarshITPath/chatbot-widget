@@ -1,47 +1,50 @@
 // AI Response Components
-// Centralized exports for all AI response component types
+// Universal InfoCard component for all dynamic content types
 
-export { BlogCard } from './blog-card';
-export { JobCard } from './job-card';
-export { CaseStudyCard } from './case-study-card';
-export { TestimonialCard } from './testimonial-card';
-export { PortfolioCard } from './portfolio-card';
+export { InfoCard } from './info-card';
 
 // Component registry for dynamic rendering
-import { BlogCard } from './blog-card';
-import { JobCard } from './job-card';
-import { CaseStudyCard } from './case-study-card';
-import { TestimonialCard } from './testimonial-card';
-import { PortfolioCard } from './portfolio-card';
+import { InfoCard } from './info-card';
 
 /**
  * Component registry mapping component types to their React components
  * Used by the AI response renderer for dynamic component rendering
+ * 
+ * All component types now use the universal InfoCard component
  */
 export const AI_COMPONENT_REGISTRY = {
-  // Cards format mappings
-  blog_card: BlogCard,
-  job_card: JobCard,
-  case_study_card: CaseStudyCard,
-  testimonial_card: TestimonialCard,
-  service_card: CaseStudyCard, // Use case study card for solutions
-  portfolio_item: PortfolioCard,
+  // Primary component
+  info_card: InfoCard,
+  
+  // Legacy component type mappings (all point to InfoCard)
+  blog_card: InfoCard,
+  job_card: InfoCard,
+  case_study_card: InfoCard,
+  testimonial_card: InfoCard,
+  service_card: InfoCard,
+  portfolio_item: InfoCard,
+  contact_card: InfoCard,
+  faq_card: InfoCard,
+  
+  // Fallback mappings
+  cards: InfoCard,
+  default: InfoCard,
 };
 
 /**
  * Get component by type
  * @param {string} componentType - The component type
- * @returns {React.Component|null} The component or null if not found
+ * @returns {React.Component} The InfoCard component (always returns InfoCard)
  */
 export const getAIComponent = (componentType) => {
-  return AI_COMPONENT_REGISTRY[componentType] || null;
+  return InfoCard;
 };
 
 /**
  * Check if component type is supported
  * @param {string} componentType - The component type to check
- * @returns {boolean} Whether the component type is supported
+ * @returns {boolean} Always returns true since InfoCard handles all types
  */
 export const isComponentTypeSupported = (componentType) => {
-  return componentType in AI_COMPONENT_REGISTRY;
+  return true;
 };

@@ -3,19 +3,6 @@
  * Parses AI responses containing structured components and markdown syntax
  */
 
-export const COMPONENT_TYPES = {
-  CARDS: 'cards'
-};
-
-export const CARD_TYPES = {
-  BLOG: 'blog',
-  JOB: 'job',
-  CASE_STUDY: 'case_study',
-  TESTIMONIAL: 'testimonial',
-  SOLUTION: 'solution',
-  PORTFOLIO: 'portfolio'
-};
-
 export const CONTENT_TYPES = {
   TEXT: 'text',
   COMPONENT: 'component',
@@ -31,22 +18,50 @@ function parseComponent(componentBlock) {
   const lines = componentBlock.trim().split('\n');
   const firstLine = lines[0];
   
-  // Extract component type from first line: <<component:cards>>
-  const componentTypeMatch = firstLine.match(/<<component:(\w+)>>/);
+  // Handle both component formats: <component:info_card> and <<component:info_card>>
+  let componentTypeMatch = firstLine.match(/<component:([^>]+)>/) || 
+                          firstLine.match(/<<component:([^>]+)>>/);
+  
   if (!componentTypeMatch) {
     return null;
   }
 
   const componentType = componentTypeMatch[1];
-  const data = {};
+  const data = { fields: [] };
+  let currentField = null;
+  let inFieldsSection = false;
   
   // Parse key-value pairs from subsequent lines
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
     if (line === '<<end>>') break;
     
+    // Handle fields section
+    if (line === 'fields:') {
+      inFieldsSection = true;
+      continue;
+    }
+    
+    // Handle field entries: - key: value or   - key: value (with spaces)
+    if (line.match(/^\s*-\s*key:\s*/)) {
+      // Save previous field if exists
+      if (currentField && currentField.key && currentField.value) {
+        data.fields.push(currentField);
+      }
+      const keyValue = line.replace(/^\s*-\s*key:\s*/, '').trim();
+      currentField = { key: keyValue, value: '' };
+      continue;
+    }
+    
+    // Handle value entries: value: ... or   value: ... (with spaces)
+    if (line.match(/^\s*value:\s*/) && currentField) {
+      currentField.value = line.replace(/^\s*value:\s*/, '').trim();
+      continue;
+    }
+    
+    // Handle direct key-value pairs (backwards compatibility)
     const colonIndex = line.indexOf(':');
-    if (colonIndex > 0) {
+    if (colonIndex > 0 && !line.startsWith('-') && !inFieldsSection) {
       const key = line.substring(0, colonIndex).trim();
       let value = line.substring(colonIndex + 1).trim();
       
@@ -56,15 +71,15 @@ function parseComponent(componentBlock) {
         const nextLine = lines[j].trim();
         if (nextLine === '<<end>>') break;
         
-        // Check if this line starts a new key (contains a colon not at the beginning)
+        // Check if this line starts a new key or field
         const nextColonIndex = nextLine.indexOf(':');
-        if (nextColonIndex > 0) {
-          // This is a new key, stop collecting for current value
+        if ((nextColonIndex > 0 && !nextLine.startsWith('-')) || 
+            nextLine.startsWith('- key:') || 
+            nextLine === 'fields:') {
           break;
         } else if (nextLine) {
-          // This line is part of the current value
           value += ' ' + nextLine;
-          i = j; // Skip this line in the outer loop
+          i = j;
         }
         j++;
       }
@@ -72,25 +87,20 @@ function parseComponent(componentBlock) {
       data[key] = value;
     }
   }
-
-  // Only support cards format with type property
-  let finalComponentType = componentType;
-  if (componentType === COMPONENT_TYPES.CARDS && data.type) {
-    // Map the type to appropriate component type for rendering
-    const typeMapping = {
-      [CARD_TYPES.BLOG]: 'blog_card',
-      [CARD_TYPES.JOB]: 'job_card',
-      [CARD_TYPES.CASE_STUDY]: 'case_study_card',
-      [CARD_TYPES.TESTIMONIAL]: 'testimonial_card',
-      [CARD_TYPES.SOLUTION]: 'service_card',
-      [CARD_TYPES.PORTFOLIO]: 'portfolio_item'
-    };
-    
-    finalComponentType = typeMapping[data.type] || componentType;
-  } else {
-    // If it's not the cards format, return null (unsupported)
-    return null;
+  
+  // Add the last field if it exists
+  if (currentField && currentField.key && currentField.value) {
+    data.fields.push(currentField);
   }
+
+  // Handle type specification in component tag: <component:info_card:blog>
+  const typeSpecificMatch = componentType.match(/info_card:(\w+)/);
+  if (typeSpecificMatch) {
+    data.type = typeSpecificMatch[1];
+  }
+
+  // All components now use info_card
+  const finalComponentType = 'info_card';
 
   return {
     type: CONTENT_TYPES.COMPONENT,
@@ -163,8 +173,9 @@ function enhanceTextWithMarkdown(text) {
  * @returns {Array} Array of text chunks and component blocks
  */
 function splitTextAroundComponents(text) {
-  // Only match cards format
-  const componentRegex = /<<component:cards>>[\s\S]*?<<end>>/g;
+  // Match both old and new component formats
+  // Handles: <component:info_card>, <<component:info_card>>, and any other component types
+  const componentRegex = /(?:<<component:[^>]+>>[\s\S]*?<<end>>)|(?:<component:[^>]+>[\s\S]*?<<end>>)/g;
   const parts = [];
   let lastIndex = 0;
   let match;
@@ -256,97 +267,28 @@ export function parseAIResponse(responseText) {
  * @returns {object} Validation result with isValid and errors
  */
 export function validateComponentData(componentType, data) {
-  const validationRules = {
-    // Cards format validation rules
-    [COMPONENT_TYPES.CARDS]: {
-      required: ['type'],
-      optional: ['title', 'description', 'link', 'image', 'author', 'date', 'tags', 'readTime', 
-                'company', 'location', 'salary', 'requirements', 'experience', 'skills', 'apply_link', 'posted',
-                'client', 'industry', 'duration', 'technologies', 'subtitle',
-                'content', 'position', 'rating',
-                'name', 'features', 'price', 'currency', 'period', 'popular',
-                'icon', 'category', 'bio', 'email', 'social']
-    },
-    
-    // Component type mappings
-    'blog_card': {
-      required: ['title'],
-      optional: ['description', 'author', 'date', 'link', 'image', 'tags', 'readTime']
-    },
-    'job_card': {
-      required: ['title'],
-      optional: ['company', 'location', 'type', 'salary', 'description', 'requirements', 'link', 'experience', 'skills', 'apply_link', 'posted']
-    },
-    'case_study_card': {
-      required: ['title', 'description'],
-      optional: ['client', 'industry', 'duration', 'technologies', 'link', 'image', 'subtitle']
-    },
-    'testimonial_card': {
-      required: ['content', 'author'],
-      optional: ['company', 'position', 'rating', 'image']
-    },
-    'portfolio_item': {
-      required: ['title', 'description'],
-      optional: ['image', 'technologies', 'link', 'category', 'date']
-    },
-    'service_card': {
-      required: ['title', 'description'],
-      optional: ['icon', 'features', 'link', 'price']
-    }
-  };
-
-  const rules = validationRules[componentType];
-  if (!rules) {
-    return { isValid: false, errors: [`Unknown component type: ${componentType}`] };
-  }
-
+  // Simplified validation since we only use info_card now
   const errors = [];
-  const dataKeys = Object.keys(data);
 
-  // Special validation for cards format
-  if (componentType === COMPONENT_TYPES.CARDS) {
-    // Validate that type is provided and is valid
-    if (!data.type) {
-      errors.push('Missing required field: type');
-    } else if (!Object.values(CARD_TYPES).includes(data.type)) {
-      errors.push(`Invalid card type: ${data.type}. Supported types: ${Object.values(CARD_TYPES).join(', ')}`);
-    }
-    
-    // Additional validation based on card type
-    if (data.type === CARD_TYPES.BLOG && !data.title) {
-      errors.push('Blog cards require title');
-    }
-    if (data.type === CARD_TYPES.JOB && !data.title) {
-      errors.push('Job cards require title');
-    }
-    if (data.type === CARD_TYPES.CASE_STUDY && (!data.title || !data.description)) {
-      errors.push('Case study cards require title and description');
-    }
-    if (data.type === CARD_TYPES.TESTIMONIAL && (!data.content || !data.author)) {
-      errors.push('Testimonial cards require content and author');
-    }
-    if (data.type === CARD_TYPES.PORTFOLIO && (!data.title || !data.description)) {
-      errors.push('Portfolio cards require title and description');
-    }
-    if (data.type === CARD_TYPES.SOLUTION && (!data.title || !data.description)) {
-      errors.push('Solution cards require title and description');
-    }
-  } else {
-    // Standard validation for mapped component types
-    // Check required fields
-    for (const field of rules.required) {
-      if (!data[field] || data[field].trim() === '') {
-        errors.push(`Missing required field: ${field}`);
-      }
+  // Validate fields structure if present
+  if (data.fields) {
+    if (!Array.isArray(data.fields)) {
+      errors.push('fields must be an array');
+    } else {
+      data.fields.forEach((field, index) => {
+        if (!field.key) {
+          errors.push(`Field at index ${index} is missing 'key' property`);
+        }
+        if (!field.value) {
+          errors.push(`Field at index ${index} is missing 'value' property`);
+        }
+      });
     }
   }
 
-  // Check for unknown fields (optional validation)
-  const allowedFields = [...rules.required, ...rules.optional];
-  for (const key of dataKeys) {
-    if (!allowedFields.includes(key)) {
-      console.warn(`Unknown field for ${componentType}: ${key}`);
-    }
+  // Basic validation - at least some content should be present
+  if (!data.title && (!data.fields || data.fields.length === 0) && !data.content && !data.description) {
+    errors.push('Component must have at least a title, fields, content, or description');
   }
 
   return {
@@ -361,20 +303,8 @@ export function validateComponentData(componentType, data) {
  * @returns {string} Display name
  */
 export function getComponentDisplayName(componentType) {
-  const displayNames = {
-    // Cards format
-    [COMPONENT_TYPES.CARDS]: 'Card',
-    
-    // Component type mappings
-    'blog_card': 'Blog Post',
-    'job_card': 'Job Posting',
-    'case_study_card': 'Case Study',
-    'testimonial_card': 'Testimonial',
-    'portfolio_item': 'Portfolio Item',
-    'service_card': 'Solution'
-  };
-
-  return displayNames[componentType] || componentType;
+  // All components are now InfoCard
+  return 'Info Card';
 }
 
 export default parseAIResponse;
