@@ -1,16 +1,66 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useStreamingOptimization, useMessageOptimization } from "./useOptimizedChat";
+import { chatAPI } from "../api/client";
+import sessionManager from "../utils/sessionManager";
 
 export const useChatLogic = (initialMessages, config) => {
   const [messages, setMessages] = useState(initialMessages || []);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [hasFirstChunk, setHasFirstChunk] = useState(false);
+  const [sessionId, setSessionId] = useState(null);
   const messagesEndRef = useRef(null);
 
   // Use optimization hooks
   const { addToStream, flushStream, resetStream } = useStreamingOptimization();
   const { messageKeys } = useMessageOptimization(messages);
+
+  // Load session from localStorage on component mount
+  useEffect(() => {
+    const storedSessionId = sessionManager.getCurrentSessionId();
+    if (storedSessionId) {
+      setSessionId(storedSessionId);
+      // Load conversation history for existing session
+      loadSessionMessages(storedSessionId);
+    }
+  }, []);
+
+  // Save session to localStorage when sessionId changes
+  useEffect(() => {
+    if (sessionId) {
+      sessionManager.setSessionId(sessionId);
+    }
+  }, [sessionId]);
+
+  // Load messages from session
+  const loadSessionMessages = async (sessionId) => {
+    try {
+      const data = await chatAPI.getSessionMessages(sessionId);
+      if (data.messages && Array.isArray(data.messages)) {
+        // Transform API messages to match our message format
+        const transformedMessages = data.messages.map(msg => ({
+          sender: msg.role === 'user' ? 'user' : 'bot',
+          text: msg.content,
+          timestamp: msg.timestamp,
+          messageIndex: msg.messageIndex
+        }));
+        setMessages(transformedMessages);
+        
+        // Save session info to history
+        sessionManager.saveSessionToHistory(sessionId, {
+          messageCount: data.count || transformedMessages.length,
+          lastMessage: transformedMessages[transformedMessages.length - 1]?.text || '',
+          historyType: data.historyType || 'comprehensive'
+        });
+      }
+    } catch (error) {
+      console.error('Failed to load session messages:', error);
+      // If session is invalid, clear it
+      if (error.message.includes('404') || error.message.includes('not found')) {
+        clearSession();
+      }
+    }
+  };
 
   // Memoize configuration values to prevent recalculation
   const configValues = useMemo(
@@ -41,12 +91,12 @@ export const useChatLogic = (initialMessages, config) => {
     [config]
   );
 
-  // Optimized sendMessage with reduced state updates during streaming
+  // Optimized sendMessage with session management
   const sendMessage = useCallback(async () => {
     if (!input.trim() || loading) return;
 
     const userMessage = { sender: "user", text: input };
-    const question = input;
+    const messageText = input;
 
     // Clear input immediately for better UX
     setInput("");
@@ -59,68 +109,39 @@ export const useChatLogic = (initialMessages, config) => {
     resetStream();
 
     try {
-      const res = await fetch(`${configValues.apiUrl}/ask`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ question, useStreaming: true }),
-      });
+      // Use the chatAPI with automatic session handling
+      const data = await chatAPI.sendMessage(messageText, sessionId);
 
-      if (!res.body) throw new Error("No response body");
+      // Set session ID if this was the first message
+      if (!sessionId && data.sessionId) {
+        setSessionId(data.sessionId);
+      }
 
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let botMessageAdded = false;
+      // Add bot response to messages
+      if (data.response) {
+        const botMessage = {
+          sender: "bot",
+          text: data.response,
+          sessionId: data.sessionId,
+          messageCount: data.messageCount,
+          timestamp: new Date().toISOString(),
+          tokenUsage: data.tokenUsage, // Include token usage info
+          cacheHit: data.cacheHit // Include cache hit info
+        };
 
-      // Optimized update function using streaming hook
-      const updateBotMessage = (text) => {
-        setMessages((prev) => {
-          const updated = [...prev];
-          const lastIndex = updated.length - 1;
-          if (updated[lastIndex]?.sender === "bot") {
-            updated[lastIndex] = {
-              ...updated[lastIndex],
-              text: text,
-            };
-          }
-          return updated;
-        });
-      };
+        setMessages((prev) => [...prev, botMessage]);
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk
-          .split("\n")
-          .filter((line) => line.trim().startsWith("data:"));
-
-        for (const line of lines) {
-          try {
-            const json = JSON.parse(line.replace(/^data:\s*/, ""));
-
-            if (json.chunk) {
-              // First chunk - add bot message placeholder
-              if (!botMessageAdded) {
-                setMessages((prev) => [...prev, { sender: "bot", text: "" }]);
-                botMessageAdded = true;
-                setHasFirstChunk(true);
-              }
-
-              // Use optimized streaming with batching
-              addToStream(json.chunk, updateBotMessage, {
-                batchSize: 5,
-                updateInterval: 30,
-              });
-            }
-          } catch (e) {
-            console.error("Failed to parse chunk:", line, e);
-          }
+        // Update session history
+        if (data.sessionId) {
+          sessionManager.saveSessionToHistory(data.sessionId, {
+            messageCount: data.messageCount,
+            lastMessage: data.response,
+            lastTimestamp: botMessage.timestamp,
+            tokenUsage: data.tokenUsage
+          });
         }
       }
 
-      // Final flush to ensure all content is displayed
-      flushStream(updateBotMessage);
     } catch (error) {
       setMessages((prev) => [
         ...prev,
@@ -131,7 +152,14 @@ export const useChatLogic = (initialMessages, config) => {
       setLoading(false);
       resetStream();
     }
-  }, [input, loading, configValues.apiUrl, setMessages]);
+  }, [input, loading, sessionId, resetStream]);
+
+  // Function to clear session and start fresh
+  const clearSession = useCallback(() => {
+    sessionManager.clearSession();
+    setSessionId(null);
+    setMessages([]);
+  }, []);
 
   // Optimized scroll effect with debouncing
   useEffect(() => {
@@ -172,9 +200,12 @@ export const useChatLogic = (initialMessages, config) => {
     messagesEndRef,
     messageKeys,
     configValues,
+    sessionId,
     handleInputChange,
     handleKeyDown,
     handleSendClick,
-    sendMessage
+    sendMessage,
+    clearSession,
+    loadSessionMessages
   };
 };

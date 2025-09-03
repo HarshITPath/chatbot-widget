@@ -28,9 +28,11 @@ const ChatWindow = memo(function ChatWindow({
     messagesEndRef,
     messageKeys,
     configValues,
+    sessionId,
     handleInputChange,
     handleKeyDown,
     handleSendClick,
+    clearSession,
   } = useChatLogic(initialMessages, config, onClose);
 
   return (
@@ -74,21 +76,48 @@ const ChatWindow = memo(function ChatWindow({
             >
               {configValues.botAvatar}
             </Avatar>
-            <Typography
-              variant="subtitle1"
-              sx={{ fontWeight: 600, lineHeight: 1.2 }}
-            >
-              {configValues.botName}
-            </Typography>
+            <Box>
+              <Typography
+                variant="subtitle1"
+                sx={{ fontWeight: 600, lineHeight: 1.2 }}
+              >
+                {configValues.botName}
+              </Typography>
+              {sessionId && (
+                <Typography
+                  variant="caption"
+                  sx={{ 
+                    opacity: 0.8, 
+                    fontSize: "0.75rem",
+                    display: "block"
+                  }}
+                >
+                  Session: {sessionId.split('_')[1]?.substring(0, 8)}...
+                </Typography>
+              )}
+            </Box>
           </Box>
-          <IconButton
-            size="small"
-            color="inherit"
-            onClick={onClose}
-            sx={{ "&:hover": { bgcolor: "rgba(255,255,255,0.1)" } }}
-          >
-            <ICONS.CLOSE fontSize="small" />
-          </IconButton>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+            {sessionId && (
+              <IconButton
+                size="small"
+                color="inherit"
+                onClick={clearSession}
+                title="Clear Session"
+                sx={{ "&:hover": { bgcolor: "rgba(255,255,255,0.1)" } }}
+              >
+                <ICONS.REFRESH fontSize="small" />
+              </IconButton>
+            )}
+            <IconButton
+              size="small"
+              color="inherit"
+              onClick={onClose}
+              sx={{ "&:hover": { bgcolor: "rgba(255,255,255,0.1)" } }}
+            >
+              <ICONS.CLOSE fontSize="small" />
+            </IconButton>
+          </Box>
         </Toolbar>
       </AppBar>
 

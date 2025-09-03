@@ -4,6 +4,7 @@ import OpenInNewIcon from "@mui/icons-material/OpenInNew";
 import ArticleIcon from "@mui/icons-material/Article";
 import PersonIcon from "@mui/icons-material/Person";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 export const ICONS = {
     CLOSE: CloseIcon,
@@ -11,5 +12,6 @@ export const ICONS = {
     OPEN_IN_NEW:OpenInNewIcon,
     ARTICLE:ArticleIcon,
     PERSON:PersonIcon,
-    CALENDAR:CalendarTodayIcon
+    CALENDAR:CalendarTodayIcon,
+    REFRESH:RefreshIcon
 }

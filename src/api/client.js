@@ -99,4 +99,37 @@ async function apiFetch(endpoint, options = {}, stream = false) {
   }
 }
 
+// Chat API functions
+export const chatAPI = {
+  // Start a new chat session
+  startChat: async (initialMessage) => {
+    return apiFetch('/start-chat', {
+      method: 'POST',
+      body: JSON.stringify({ initialMessage })
+    });
+  },
+
+  // Continue existing chat session
+  continueChat: async (sessionId, message) => {
+    return apiFetch(`/chat/${sessionId}/continue`, {
+      method: 'POST',
+      body: JSON.stringify({ message })
+    });
+  },
+
+  // Get messages by session ID
+  getSessionMessages: async (sessionId) => {
+    return apiFetch(`/sessions/${sessionId}/messages`);
+  },
+
+  // Generic send message function that handles session logic
+  sendMessage: async (message, sessionId = null) => {
+    if (sessionId) {
+      return chatAPI.continueChat(sessionId, message);
+    } else {
+      return chatAPI.startChat(message);
+    }
+  }
+};
+
 export default apiFetch;
