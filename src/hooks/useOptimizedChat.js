@@ -1,9 +1,5 @@
 import { useCallback, useRef, useMemo } from 'react';
 
-/**
- * Hook for optimizing message rendering
- * Memoizes message keys and prevents unnecessary re-renders
- */
 export const useMessageOptimization = (messages) => {
   // Create stable keys for messages to prevent unnecessary re-renders
   const messageKeys = useMemo(() => {
@@ -14,22 +10,8 @@ export const useMessageOptimization = (messages) => {
     });
   }, [messages]);
 
-  // Memoize message chunks for better performance
-  const messageChunks = useMemo(() => {
-    const chunkSize = 50; // Render messages in chunks of 50
-    const chunks = [];
-    
-    for (let i = 0; i < messages.length; i += chunkSize) {
-      chunks.push(messages.slice(i, i + chunkSize));
-    }
-    
-    return chunks;
-  }, [messages]);
-
   return {
     messageKeys,
-    messageChunks,
-    totalMessages: messages.length
   };
 };
 
