@@ -330,7 +330,7 @@ const ContentRenderer = memo(({ item, config = {} }) => {
               Invalid {getComponentDisplayName(componentType)} data:
             </Typography>
             <Box component="ul" sx={{ m: 0, pl: 2 }}>
-              {validation.errors.map((error, index) => (
+              {validation?.errors?.map((error, index) => (
                 <li key={index}>
                   <Typography variant="body2">{error}</Typography>
                 </li>
@@ -389,7 +389,7 @@ export const AIResponseRenderer = memo(({ message, config = {} }) => {
     <Box
       sx={{ "& > *:first-of-type": { mt: 0 }, "& > *:last-child": { mb: 0 } }}
     >
-      {parsedContent.map((item) => (
+      {parsedContent?.map((item) => (
         <ContentRenderer key={item.id} item={item} config={config} />
       ))}
     </Box>

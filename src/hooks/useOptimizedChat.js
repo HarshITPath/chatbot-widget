@@ -1,62 +1,13 @@
 import { useCallback, useRef, useMemo } from 'react';
 
 /**
- * Custom hook for optimizing chat performance
- * Provides debounced updates and batched operations
- */
-// export const useOptimizedChat = () => {
-//   const updateTimeoutRef = useRef(null);
-//   const batchedUpdatesRef = useRef([]);
-
-//   // Debounced state update function
-//   const debouncedUpdate = useCallback((updateFn, delay = 50) => {
-//     if (updateTimeoutRef.current) {
-//       clearTimeout(updateTimeoutRef.current);
-//     }
-
-//     updateTimeoutRef.current = setTimeout(() => {
-//       updateFn();
-//       updateTimeoutRef.current = null;
-//     }, delay);
-//   }, []);
-
-//   // Batch multiple updates together
-//   const batchUpdate = useCallback((updateFn) => {
-//     batchedUpdatesRef.current.push(updateFn);
-    
-//     debouncedUpdate(() => {
-//       const updates = [...batchedUpdatesRef.current];
-//       batchedUpdatesRef.current = [];
-      
-//       // Execute all batched updates
-//       updates.forEach(update => update());
-//     }, 16); // ~60fps
-//   }, [debouncedUpdate]);
-
-//   // Cleanup function
-//   const cleanup = useCallback(() => {
-//     if (updateTimeoutRef.current) {
-//       clearTimeout(updateTimeoutRef.current);
-//       updateTimeoutRef.current = null;
-//     }
-//     batchedUpdatesRef.current = [];
-//   }, []);
-
-//   return {
-//     debouncedUpdate,
-//     batchUpdate,
-//     cleanup
-//   };
-// };
-
-/**
  * Hook for optimizing message rendering
  * Memoizes message keys and prevents unnecessary re-renders
  */
 export const useMessageOptimization = (messages) => {
   // Create stable keys for messages to prevent unnecessary re-renders
   const messageKeys = useMemo(() => {
-    return messages.map((msg, index) => {
+    return messages?.map((msg, index) => {
       // Create a stable key based on content and position
       const contentHash = msg.text.length + msg.sender + index;
       return `${msg.sender}-${index}-${contentHash}`;

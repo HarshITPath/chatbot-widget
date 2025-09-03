@@ -179,7 +179,7 @@ export const InfoCard = ({ data }) => {
   const allFields = [...fields];
   
   // Add direct properties as fields if they don't exist in fields array
-  const fieldKeys = fields.map(f => f.key?.toLowerCase());
+  const fieldKeys = fields?.map(f => f.key?.toLowerCase());
   
   if (author && !fieldKeys.includes('author')) {
     allFields.push({ key: 'Author', value: author });
@@ -271,11 +271,11 @@ export const InfoCard = ({ data }) => {
     }
 
     if (lowerKey.includes('technologies') || lowerKey.includes('skills') || lowerKey.includes('tags')) {
-      const items = value.split(/[,;|]/).map(item => item.trim()).filter(Boolean);
+      const items = value.split(/[,;|]/)?.map(item => item.trim()).filter(Boolean);
       if (items.length > 1) {
         return (
           <Box display="flex" flexWrap="wrap" gap={0.5}>
-            {items.map((item, index) => (
+            {items?.map((item, index) => (
               <Chip 
                 key={index} 
                 label={item} 
@@ -301,10 +301,10 @@ export const InfoCard = ({ data }) => {
     if (lowerKey.includes('responsibilities') || lowerKey.includes('description')) {
       // Check if it's a multi-line string with bullet points
       if (value.includes('|') || value.includes('\n-') || value.includes('- ')) {
-        const lines = value.split(/\||\n/).map(line => line.trim()).filter(Boolean);
+        const lines = value.split(/\||\n/)?.map(line => line.trim()).filter(Boolean);
         return (
           <Box component="ul" sx={{ m: 0, pl: 2 }}>
-            {lines.map((line, index) => (
+            {lines?.map((line, index) => (
               <Typography 
                 key={index} 
                 component="li" 
@@ -409,7 +409,7 @@ export const InfoCard = ({ data }) => {
         {allFields.length > 0 && (
           <Box mb={2}>
             <Stack spacing={1.5}>
-              {allFields.map((field, index) => {
+              {allFields?.map((field, index) => {
                 if (!field.key || !field.value) return null;
                 
                 const icon = getFieldIcon(field.key);
@@ -476,7 +476,7 @@ export const InfoCard = ({ data }) => {
           <Box mt={2}>
             <Divider sx={{ mb: 1.5 }} />
             <Box display="flex" flexWrap="wrap" gap={1}>
-              {Object.entries(otherProps).map(([key, value]) => {
+              {Object.entries(otherProps)?.map(([key, value]) => {
                 if (!value || typeof value === 'object') return null;
                 return (
                   <Chip 
