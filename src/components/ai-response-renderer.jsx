@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo, useMemo } from "react";
 import { Box, Typography, Alert } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -13,7 +13,7 @@ import {
 } from "./ai-components";
 
 //  Unknown Component - Fallback for unsupported component types
-const UnknownComponent = ({ data, componentType }) => {
+const UnknownComponent = memo(({ data, componentType }) => {
   // All components now use InfoCard, so this should rarely be needed
   const InfoCardComponent = getAIComponent("info_card");
 
@@ -32,10 +32,10 @@ const UnknownComponent = ({ data, componentType }) => {
       </Typography>
     </Alert>
   );
-};
+});
 
 // Renders a single parsed content item
-const ContentRenderer = ({ item, config = {} }) => {
+const ContentRenderer = memo(({ item, config = {} }) => {
   const { type, content, componentType, data, id } = item;
 
   // Handle different content types
@@ -361,11 +361,11 @@ const ContentRenderer = ({ item, config = {} }) => {
         </Alert>
       );
   }
-};
+});
 
 //  Main AI Response Renderer Component Parses and renders AI responses with mixed content and components
-export const AIResponseRenderer = ({ message, config = {} }) => {
-  const parsedContent = parseAIResponse(message);
+export const AIResponseRenderer = memo(({ message, config = {} }) => {
+  const parsedContent = useMemo(() => parseAIResponse(message), [message]);
 
   // If parsing returns empty array, fall back to simple text
   if (!parsedContent || parsedContent.length === 0) {
@@ -394,7 +394,7 @@ export const AIResponseRenderer = ({ message, config = {} }) => {
       ))}
     </Box>
   );
-};
+});
 
 //  Hook for parsing AI responses (useful for getting parsed data without rendering)
 export const useAIResponseParser = (message) => {
