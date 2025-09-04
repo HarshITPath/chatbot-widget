@@ -102,19 +102,47 @@ async function apiFetch(endpoint, options = {}, stream = false) {
 // Chat API functions
 export const chatAPI = {
   // Start a new chat session
-  startChat: async (initialMessage) => {
-    return apiFetch('/start-chat', {
-      method: 'POST',
-      body: JSON.stringify({ initialMessage })
-    });
+  startChat: async (initialMessage, useStreaming = false) => {
+    const requestBody = { initialMessage };
+    if (useStreaming) {
+      requestBody.useStreaming = true;
+    }
+
+    if (useStreaming) {
+      // Return raw response for streaming
+      return apiFetch('/start-chat', {
+        method: 'POST',
+        body: JSON.stringify(requestBody)
+      }, true);
+    } else {
+      // Return JSON response for non-streaming
+      return apiFetch('/start-chat', {
+        method: 'POST',
+        body: JSON.stringify(requestBody)
+      });
+    }
   },
 
   // Continue existing chat session
-  continueChat: async (sessionId, message) => {
-    return apiFetch(`/chat/${sessionId}/continue`, {
-      method: 'POST',
-      body: JSON.stringify({ message })
-    });
+  continueChat: async (sessionId, message, useStreaming = false) => {
+    const requestBody = { message };
+    if (useStreaming) {
+      requestBody.useStreaming = true;
+    }
+
+    if (useStreaming) {
+      // Return raw response for streaming
+      return apiFetch(`/chat/${sessionId}/continue`, {
+        method: 'POST',
+        body: JSON.stringify(requestBody)
+      }, true);
+    } else {
+      // Return JSON response for non-streaming
+      return apiFetch(`/chat/${sessionId}/continue`, {
+        method: 'POST',
+        body: JSON.stringify(requestBody)
+      });
+    }
   },
 
   // Get messages by session ID
@@ -123,11 +151,11 @@ export const chatAPI = {
   },
 
   // Generic send message function that handles session logic
-  sendMessage: async (message, sessionId = null) => {
+  sendMessage: async (message, sessionId = null, useStreaming = false) => {
     if (sessionId) {
-      return chatAPI.continueChat(sessionId, message);
+      return chatAPI.continueChat(sessionId, message, useStreaming);
     } else {
-      return chatAPI.startChat(message);
+      return chatAPI.startChat(message, useStreaming);
     }
   }
 };

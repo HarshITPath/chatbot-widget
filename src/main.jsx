@@ -11,6 +11,7 @@ document.body.appendChild(rootEl);
 
 // Default configuration
 const config = {
+  useStreaming: true,
   apiUrl: "http://192.168.0.39:3000/api",
   botName: "IT Path Assistant",
   botAvatar: "🤖",
