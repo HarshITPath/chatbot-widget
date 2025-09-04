@@ -40,17 +40,7 @@ const ContentRenderer = memo(({ item, config = {} }) => {
     case CONTENT_TYPES.TEXT:
       return (
         <Box key={id} sx={{ mb: 1 }}>
-          <Typography
-            variant="body2"
-            sx={{
-              lineHeight: 1.5,
-              fontSize: "0.875rem",
-              whiteSpace: "pre-wrap",
-              color: "text.primary",
-            }}
-          >
-            {content}
-          </Typography>
+          <Typography variant="subtitle1">{content}</Typography>
         </Box>
       );
 
@@ -61,32 +51,13 @@ const ContentRenderer = memo(({ item, config = {} }) => {
             remarkPlugins={[remarkGfm]}
             components={{
               p: ({ children }) => (
-                <Typography
-                  variant="body2"
-                  sx={{
-                    m: 0,
-                    mb: 1,
-                    lineHeight: 1.5,
-                    fontSize: "0.875rem",
-                    whiteSpace: "pre-wrap",
-                    "&:last-child": { mb: 0 },
-                  }}
-                >
-                  {children}
-                </Typography>
+                <Typography variant="subtitle1">{children}</Typography>
               ),
               h1: ({ children }) => (
                 <Typography
-                  variant="h6"
+                  variant="body1"
                   sx={{
                     fontWeight: 700,
-                    m: 0,
-                    mb: 1.5,
-                    mt: 1.5,
-                    lineHeight: 1.3,
-                    fontSize: "1.1rem",
-                    color: "primary.main",
-                    "&:first-of-type": { mt: 0 },
                   }}
                 >
                   {children}
@@ -94,16 +65,9 @@ const ContentRenderer = memo(({ item, config = {} }) => {
               ),
               h2: ({ children }) => (
                 <Typography
-                  variant="subtitle1"
+                  variant="body2"
                   sx={{
-                    fontWeight: 650,
-                    m: 0,
-                    mb: 1,
-                    mt: 1.5,
-                    lineHeight: 1.3,
-                    fontSize: "1rem",
-                    color: "primary.dark",
-                    "&:first-of-type": { mt: 0 },
+                    fontWeight: 700,
                   }}
                 >
                   {children}
@@ -111,15 +75,9 @@ const ContentRenderer = memo(({ item, config = {} }) => {
               ),
               h3: ({ children }) => (
                 <Typography
-                  variant="body1"
+                  variant="subtitle1"
                   sx={{
                     fontWeight: 600,
-                    m: 0,
-                    mb: 0.8,
-                    mt: 1,
-                    lineHeight: 1.3,
-                    fontSize: "0.95rem",
-                    "&:first-of-type": { mt: 0 },
                   }}
                 >
                   {children}
@@ -160,10 +118,8 @@ const ContentRenderer = memo(({ item, config = {} }) => {
               li: ({ children }) => (
                 <Typography
                   component="li"
-                  variant="body2"
+                  variant="subtitle1"
                   sx={{
-                    fontSize: "0.875rem",
-                    lineHeight: 1.4,
                     color: "text.primary",
                   }}
                 >
@@ -185,7 +141,7 @@ const ContentRenderer = memo(({ item, config = {} }) => {
                     transition: "all 0.2s ease",
                     "&:hover": {
                       borderBottomColor: "primary.main",
-                      color: "primary.dark",
+                      color: "primary.main",
                     },
                   }}
                 >
@@ -371,7 +327,6 @@ export const AIResponseRenderer = memo(({ message, config = {} }) => {
         variant="body2"
         sx={{
           lineHeight: 1.5,
-          fontSize: "0.875rem",
           whiteSpace: "pre-wrap",
           color: "text.primary",
         }}

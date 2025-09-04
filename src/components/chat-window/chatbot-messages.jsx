@@ -42,7 +42,7 @@ const MessageItem = memo(({ msg, botAvatar, userAvatar, config }) => {
           <AIResponseRenderer message={msg.text} config={config} />
         ) : (
           <Typography
-            variant="body2"
+            variant="subtitle1"
             sx={{ lineHeight: 1.4, whiteSpace: "pre-wrap" }}
           >
             {msg.text}

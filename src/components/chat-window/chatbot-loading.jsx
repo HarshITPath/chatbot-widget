@@ -25,9 +25,8 @@ const LoadingIndicator = memo(({ botAvatar }) => (
       }}
     >
       <Typography
-        variant="body2"
+        variant="subtitle1"
         color="text.secondary"
-        sx={{ fontSize: "0.85rem" }}
       >
         AI is thinking
       </Typography>
