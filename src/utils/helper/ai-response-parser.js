@@ -1,19 +1,10 @@
-/**
- * AI Response Parser
- * Parses AI responses containing structured components and markdown syntax
- */
-
+// AI Response Parser Parses AI responses containing structured components and markdown syntax
 export const CONTENT_TYPES = {
   TEXT: 'text',
   COMPONENT: 'component',
   MARKDOWN: 'markdown'
 };
 
-/**
- * Parses a single component block
- * @param {string} componentBlock - The component block string
- * @returns {object} Parsed component object
- */
 function parseComponent(componentBlock) {
   const lines = componentBlock.trim().split('\n');
   const firstLine = lines[0];
@@ -110,12 +101,6 @@ function parseComponent(componentBlock) {
   };
 }
 
-/**
- * Generates a unique ID for a component
- * @param {string} type - Component type
- * @param {object} data - Component data
- * @returns {string} Unique component ID
- */
 function generateComponentId(type, data) {
   const timestamp = Date.now();
   const hash = Math.random().toString(36).substr(2, 9);
@@ -124,11 +109,6 @@ function generateComponentId(type, data) {
   return `${type}_${sanitizedTitle}_${hash}_${timestamp}`;
 }
 
-/**
- * Detects if text contains markdown-like patterns
- * @param {string} text - Text to analyze
- * @returns {boolean} Whether text contains markdown
- */
 function containsMarkdown(text) {
   const markdownPatterns = [
     /^[\s]*[-*+]\s+/m,        // Bullet lists (- * +)
@@ -147,11 +127,7 @@ function containsMarkdown(text) {
   return markdownPatterns.some(pattern => pattern.test(text));
 }
 
-/**
- * Enhances plain text by detecting and converting markdown-like patterns
- * @param {string} text - Plain text to enhance
- * @returns {string} Enhanced text with markdown syntax
- */
+// Enhances plain text by detecting and converting markdown-like patterns
 function enhanceTextWithMarkdown(text) {
   let enhanced = text;
   
@@ -161,17 +137,9 @@ function enhanceTextWithMarkdown(text) {
   // Convert numbered lists
   enhanced = enhanced.replace(/^\s*(\d+)\.\s+(.+)$/gm, '$1. $2');
   
-  // Detect and preserve existing markdown links
-  // [text](url) format is already markdown-compatible
-  
   return enhanced;
 }
 
-/**
- * Splits text around component blocks
- * @param {string} text - Text containing component blocks
- * @returns {Array} Array of text chunks and component blocks
- */
 function splitTextAroundComponents(text) {
   // Match both old and new component formats
   // Handles: <component:info_card>, <<component:info_card>>, and any other component types
@@ -215,12 +183,8 @@ function splitTextAroundComponents(text) {
   return parts;
 }
 
-/**
- * Main parser function that processes AI response text
- * @param {string} responseText - The raw AI response text
- * @returns {Array} Array of parsed content blocks
- */
-export function parseAIResponse(responseText) {
+// Main parser function that processes AI response text
+export default function parseAIResponse(responseText) {
   if (!responseText || typeof responseText !== 'string') {
     return [];
   }
@@ -260,12 +224,7 @@ export function parseAIResponse(responseText) {
   return parsedContent;
 }
 
-/**
- * Validates component data based on component type
- * @param {string} componentType - The type of component
- * @param {object} data - The component data
- * @returns {object} Validation result with isValid and errors
- */
+// Validates component data based on component type
 export function validateComponentData(componentType, data) {
   // Simplified validation since we only use info_card now
   const errors = [];
@@ -297,14 +256,8 @@ export function validateComponentData(componentType, data) {
   };
 }
 
-/**
- * Helper function to get component type display name
- * @param {string} componentType - Component type
- * @returns {string} Display name
- */
+// Helper function to get component type display name
 export function getComponentDisplayName(componentType) {
   // All components are now InfoCard
   return 'Info Card';
 }
-
-export default parseAIResponse;

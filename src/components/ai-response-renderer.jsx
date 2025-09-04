@@ -3,8 +3,7 @@ import { Box, Typography, Alert } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { getAIComponent } from "./ai-components";
-import {
-  parseAIResponse,
+import parseAIResponse, {
   CONTENT_TYPES,
   validateComponentData,
   getComponentDisplayName,
