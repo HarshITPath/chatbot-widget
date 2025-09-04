@@ -399,5 +399,3 @@ export const useAIResponseParser = (message) => {
     return parseAIResponse(message);
   }, [message]);
 };
-
-export default AIResponseRenderer;

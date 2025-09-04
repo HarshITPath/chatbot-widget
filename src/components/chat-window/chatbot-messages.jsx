@@ -1,6 +1,6 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import { memo } from "react";
-import AIResponseRenderer from "../ai-response-renderer"
+import { AIResponseRenderer } from "../ai-response-renderer";
 
 const MessageItem = memo(({ msg, botAvatar, userAvatar, config }) => {
   return (
@@ -66,4 +66,4 @@ const MessageItem = memo(({ msg, botAvatar, userAvatar, config }) => {
   );
 });
 
-export default MessageItem
+export default MessageItem;
