@@ -224,6 +224,7 @@ export const InfoCard = ({ data }) => {
 
   // Render field value with appropriate formatting
   const renderFieldValue = (field) => {
+    console.log("field", field)
     const { key, value } = field;
     const lowerKey = key.toLowerCase();
 
@@ -324,12 +325,10 @@ export const InfoCard = ({ data }) => {
     if (value.length > 100) {
       return (
         <Typography 
-          variant="body2" 
-          color="text.secondary"
+          variant="subtitle1"
+          color="text.secondary" 
           sx={{ 
             fontStyle: lowerKey.includes('quote') || lowerKey.includes('testimonial') ? 'italic' : 'normal',
-            lineHeight: 1.5,
-            fontSize: '0.85rem',
             whiteSpace: 'pre-wrap'
           }}
         >
@@ -339,7 +338,7 @@ export const InfoCard = ({ data }) => {
     }
 
     return (
-      <Typography variant="body2" color="text.secondary" sx={{ fontSize: '0.85rem' }}>
+      <Typography variant="subtitle1" color="text.secondary">
         {value}
       </Typography>
     );
@@ -355,33 +354,12 @@ export const InfoCard = ({ data }) => {
       }}
     >
       <CardContent sx={{ p: 2 }}>
-        {/* Type Badge */}
-        <Box display="flex" justifyContent="space-between" alignItems="flex-start" mb={2}>
-          <Chip
-            icon={typeConfig.icon}
-            label={typeConfig.label}
-            size="small"
-            sx={{
-              backgroundColor: typeConfig.bgColor,
-              color: typeConfig.color,
-              fontWeight: 500,
-              fontSize: '0.75rem',
-              height: 24,
-              border: `1px solid ${typeConfig.color}20`,
-              '& .MuiChip-icon': {
-                color: typeConfig.color
-              }
-            }}
-          />
-        </Box>
-
         {/* Title */}
         {title && (
           <Typography 
-            variant="body2" 
+            variant="subtitle1" 
             sx={{ 
               fontWeight: 600, 
-              color: theme.palette.text.primary,
               mb: 1.5
             }}
           >
@@ -392,11 +370,9 @@ export const InfoCard = ({ data }) => {
         {/* Main Content */}
         {mainContent && (
           <Typography 
-            variant="body2" 
+            variant="subtitle1" 
             color="text.secondary"
             sx={{ 
-              lineHeight: 1.6,
-              fontSize: '0.9rem',
               mb: 2,
               fontStyle: quote ? 'italic' : 'normal'
             }}
@@ -433,7 +409,7 @@ export const InfoCard = ({ data }) => {
                       >
                         {field.key}:
                       </Typography>
-                      <Typography variant='subtitle2'>
+                      <Typography variant='subtitle1'>
                         {renderFieldValue(field)}
                       </Typography>
                     </Box>

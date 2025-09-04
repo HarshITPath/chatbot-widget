@@ -2,15 +2,13 @@ import React, { memo, useMemo } from "react";
 import { Box, Typography, Alert } from "@mui/material";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { getAIComponent } from "./ai-components";
 import {
   parseAIResponse,
   CONTENT_TYPES,
   validateComponentData,
   getComponentDisplayName,
-} from "../utils/ai-response-parser";
-import {
-  getAIComponent,
-} from "./ai-components";
+} from "../utils/helper/ai-response-parser";
 
 //  Unknown Component - Fallback for unsupported component types
 const UnknownComponent = memo(({ data, componentType }) => {

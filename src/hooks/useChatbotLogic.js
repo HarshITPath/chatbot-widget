@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useStreamingOptimization, useMessageOptimization } from "./useOptimizedChat";
 import { chatAPI } from "../api/client";
-import sessionManager from "../utils/sessionManager";
+import sessionManager from "../utils/helper/sessionManager";
 
 export const useChatLogic = (initialMessages, config) => {
   const [messages, setMessages] = useState(initialMessages || []);
