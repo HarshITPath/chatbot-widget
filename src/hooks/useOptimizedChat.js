@@ -1,4 +1,4 @@
-import { useCallback, useRef, useMemo } from 'react';
+import { useCallback, useRef, useMemo } from "react";
 
 export const useMessageOptimization = (messages) => {
   // Create stable keys for messages to prevent unnecessary re-renders
@@ -20,38 +20,38 @@ export const useMessageOptimization = (messages) => {
  * Reduces the frequency of state updates during streaming
  */
 export const useStreamingOptimization = () => {
-  const streamBufferRef = useRef('');
+  const streamBufferRef = useRef("");
   const lastUpdateRef = useRef(0);
   const updateQueueRef = useRef([]);
 
   const addToStream = useCallback((chunk, onUpdate, options = {}) => {
-    const { 
-      batchSize = 10, 
+    const {
+      batchSize = 10,
       updateInterval = 50,
-      forceUpdate = false 
+      forceUpdate = false,
     } = options;
 
     updateQueueRef.current.push(chunk);
-    
+
     const now = Date.now();
-    const shouldUpdate = 
+    const shouldUpdate =
       forceUpdate ||
       updateQueueRef.current.length >= batchSize ||
-      (now - lastUpdateRef.current) >= updateInterval;
+      now - lastUpdateRef.current >= updateInterval;
 
     if (shouldUpdate) {
-      const combinedChunk = updateQueueRef.current.join('');
+      const combinedChunk = updateQueueRef.current.join("");
       updateQueueRef.current = [];
       streamBufferRef.current += combinedChunk;
       lastUpdateRef.current = now;
-      
+
       onUpdate(streamBufferRef.current);
     }
   }, []);
 
   const flushStream = useCallback((onUpdate) => {
     if (updateQueueRef.current.length > 0) {
-      const combinedChunk = updateQueueRef.current.join('');
+      const combinedChunk = updateQueueRef.current.join("");
       updateQueueRef.current = [];
       streamBufferRef.current += combinedChunk;
       onUpdate(streamBufferRef.current);
@@ -59,7 +59,7 @@ export const useStreamingOptimization = () => {
   }, []);
 
   const resetStream = useCallback(() => {
-    streamBufferRef.current = '';
+    streamBufferRef.current = "";
     updateQueueRef.current = [];
     lastUpdateRef.current = 0;
   }, []);
@@ -68,6 +68,6 @@ export const useStreamingOptimization = () => {
     addToStream,
     flushStream,
     resetStream,
-    getCurrentBuffer: () => streamBufferRef.current
+    getCurrentBuffer: () => streamBufferRef.current,
   };
 };

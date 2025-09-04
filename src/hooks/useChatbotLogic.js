@@ -75,33 +75,14 @@ export const useChatLogic = (initialMessages, config) => {
     }
   }, []);
 
-  // Load session from localStorage on component mount - with loading guard and debouncing
+  // Load session from localStorage on component mount - StrictMode safe
   useEffect(() => {
-    let isMounted = true;
-    let timeoutId;
-    
-    const loadSession = () => {
-      const storedSessionId = sessionManager.getCurrentSessionId();
-      if (storedSessionId && isMounted && !sessionLoadedRef.current) {
-        console.log("Found stored session ID:", storedSessionId);
-        setSessionId(storedSessionId);
-        // Debounce the session loading to prevent double calls in StrictMode
-        timeoutId = setTimeout(() => {
-          if (isMounted && !sessionLoadedRef.current) {
-            loadSessionMessages(storedSessionId);
-          }
-        }, 100);
-      }
-    };
-    
-    loadSession();
-    
-    return () => {
-      isMounted = false;
-      if (timeoutId) {
-        clearTimeout(timeoutId);
-      }
-    };
+    const storedSessionId = sessionManager.getCurrentSessionId();
+    if (storedSessionId && !sessionLoadedRef.current) {
+      console.log("Found stored session ID:", storedSessionId);
+      setSessionId(storedSessionId);
+      loadSessionMessages(storedSessionId);
+    }
   }, [loadSessionMessages]);
 
   // Memoize configuration values to prevent recalculation

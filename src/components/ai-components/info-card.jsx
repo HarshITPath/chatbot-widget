@@ -224,7 +224,6 @@ export const InfoCard = ({ data }) => {
 
   // Render field value with appropriate formatting
   const renderFieldValue = (field) => {
-    console.log("field", field)
     const { key, value } = field;
     const lowerKey = key.toLowerCase();
 
