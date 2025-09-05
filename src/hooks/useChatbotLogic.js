@@ -1,7 +1,11 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import { useStreamingOptimization, useMessageOptimization } from "./useOptimizedChat";
+import {
+  useStreamingOptimization,
+  useMessageOptimization,
+} from "./useOptimizedChat";
 import { chatAPI } from "../api/client";
 import sessionManager from "../utils/helper/sessionManager";
+import { USER_TYPE } from "../utils/constant";
 
 export const useChatLogic = (initialMessages, config) => {
   const [messages, setMessages] = useState(initialMessages || []);
@@ -17,73 +21,53 @@ export const useChatLogic = (initialMessages, config) => {
   const { addToStream, flushStream, resetStream } = useStreamingOptimization();
   const { messageKeys } = useMessageOptimization(messages);
 
-  // Save session to localStorage when sessionId changes
-  useEffect(() => {
-    if (sessionId) {
-      console.log("Saving session to localStorage:", sessionId);
-      sessionManager.setSessionId(sessionId);
-    }
-  }, [sessionId]);
-
   // Load messages from session - memoized to prevent duplicate calls
   const loadSessionMessages = useCallback(async (sessionId) => {
     if (!sessionId || sessionLoadedRef.current || loadingSessionRef.current) {
-      console.log("Skipping session load - already loaded/loading:", { 
-        sessionId, 
-        loaded: sessionLoadedRef.current, 
-        loading: loadingSessionRef.current 
-      });
       return;
     }
-    
+
     loadingSessionRef.current = true;
     sessionLoadedRef.current = true;
-    
+
     try {
       console.log("Loading session messages for:", sessionId);
       const data = await chatAPI.getSessionMessages(sessionId);
       if (data.messages && Array.isArray(data.messages)) {
         // Transform API messages to match our message format
-        const transformedMessages = data.messages.map(msg => ({
-          sender: msg.role === 'user' ? 'user' : 'bot',
+        const transformedMessages = data.messages.map((msg) => ({
+          sender: msg.role === USER_TYPE.USER ? USER_TYPE.USER : USER_TYPE.BOT,
           text: msg.content,
           timestamp: msg.timestamp,
-          messageIndex: msg.messageIndex
+          messageIndex: msg.messageIndex,
         }));
         setMessages(transformedMessages);
-        
+
         // Save session info to history
         sessionManager.saveSessionToHistory(sessionId, {
           messageCount: data.count || transformedMessages.length,
-          lastMessage: transformedMessages[transformedMessages.length - 1]?.text || '',
-          historyType: data.historyType || 'comprehensive'
+          lastMessage:
+            transformedMessages[transformedMessages.length - 1]?.text || "",
+          historyType: data.historyType || "comprehensive",
         });
-        
-        console.log("Session messages loaded successfully:", transformedMessages.length, "messages");
+
+        console.log(
+          "Session messages loaded successfully:",
+          transformedMessages.length,
+          "messages"
+        );
       }
     } catch (error) {
-      console.error('Failed to load session messages:', error);
+      console.error("Failed to load session messages:", error);
       // Reset the flags on error so retry is possible
       sessionLoadedRef.current = false;
       loadingSessionRef.current = false;
-      // If session is invalid, clear it
-      if (error.message.includes('404') || error.message.includes('not found')) {
-        clearSession();
-      }
+
+      clearSession();
     } finally {
       loadingSessionRef.current = false;
     }
   }, []);
-
-  // Load session from localStorage on component mount - StrictMode safe
-  useEffect(() => {
-    const storedSessionId = sessionManager.getCurrentSessionId();
-    if (storedSessionId && !sessionLoadedRef.current) {
-      console.log("Found stored session ID:", storedSessionId);
-      setSessionId(storedSessionId);
-      loadSessionMessages(storedSessionId);
-    }
-  }, [loadSessionMessages]);
 
   // Memoize configuration values to prevent recalculation
   const configValues = useMemo(
@@ -116,187 +100,212 @@ export const useChatLogic = (initialMessages, config) => {
   );
 
   // Optimized sendMessage with session management and streaming support
-  const sendMessage = useCallback(async (useStreaming = true) => {
-    if (!input.trim() || loading) return;
+  const sendMessage = useCallback(
+    async (useStreaming = true) => {
+      if (!input.trim() || loading) return;
 
-    const userMessage = { sender: "user", text: input };
-    const messageText = input;
+      const userMessage = { sender: USER_TYPE.USER, text: input };
+      const messageText = input;
 
-    // Clear input immediately for better UX
-    setInput("");
+      // Clear input immediately for better UX
+      setInput("");
 
-    // Add user message
-    setMessages((prev) => [...prev, userMessage]);
+      // Add user message
+      setMessages((prev) => [...prev, userMessage]);
 
-    setLoading(true);
-    setHasFirstChunk(false);
-    resetStream();
+      setLoading(true);
+      setHasFirstChunk(false);
+      resetStream();
 
-    try {
-      if (useStreaming) {
-        // Handle streaming response
-        const response = await chatAPI.sendMessage(messageText, sessionId, true);
-        
-        if (!response.body) throw new Error("No response body");
+      try {
+        if (useStreaming) {
+          // Handle streaming response
+          const response = await chatAPI.sendMessage(
+            messageText,
+            sessionId,
+            true
+          );
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder();
-        let botMessageAdded = false;
-        let sessionData = {};
+          if (!response.body) throw new Error("No response body");
 
-        // Optimized update function using streaming hook
-        const updateBotMessage = (text) => {
-          setMessages((prev) => {
-            const updated = [...prev];
-            const lastIndex = updated.length - 1;
-            if (updated[lastIndex]?.sender === "bot") {
-              updated[lastIndex] = {
-                ...updated[lastIndex],
-                text: text,
-              };
-            }
-            return updated;
-          });
-        };
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let botMessageAdded = false;
+          let sessionData = {};
 
-        while (true) {
-          const { done, value } = await reader.read();
-          if (done) break;
-
-          const chunk = decoder.decode(value, { stream: true });
-          const lines = chunk
-            .split("\n")
-            .filter((line) => line.trim().startsWith("data:"));
-
-          for (const line of lines) {
-            try {
-              const json = JSON.parse(line.replace(/^data:\s*/, ""));
-
-              // Handle session creation/metadata - check for both formats
-              if (json.sessionId) {
-                if (!sessionId) {
-                  console.log("Setting session ID from streaming:", json.sessionId);
-                  setSessionId(json.sessionId);
-                }
-                sessionData.sessionId = json.sessionId;
+          // Optimized update function using streaming hook
+          const updateBotMessage = (text) => {
+            setMessages((prev) => {
+              const updated = [...prev];
+              const lastIndex = updated.length - 1;
+              if (updated[lastIndex]?.sender === USER_TYPE.BOT) {
+                updated[lastIndex] = {
+                  ...updated[lastIndex],
+                  text: text,
+                };
               }
-              
-              // Handle session creation type
-              if (json.type === "session_created" && json.sessionId) {
-                if (!sessionId) {
-                  console.log("Session created via streaming:", json.sessionId);
-                  setSessionId(json.sessionId);
-                }
-                sessionData.sessionId = json.sessionId;
-              }
-              
-              if (json.messageCount) {
-                sessionData.messageCount = json.messageCount;
-              }
-              if (json.tokenUsage) {
-                sessionData.tokenUsage = json.tokenUsage;
-              }
-
-              if (json.chunk) {
-                // First chunk - add bot message placeholder
-                if (!botMessageAdded) {
-                  setMessages((prev) => [...prev, { 
-                    sender: "bot", 
-                    text: "",
-                    sessionId: sessionData.sessionId,
-                    messageCount: sessionData.messageCount,
-                    timestamp: new Date().toISOString()
-                  }]);
-                  botMessageAdded = true;
-                  setHasFirstChunk(true);
-                }
-
-                // Use optimized streaming with batching
-                addToStream(json.chunk, updateBotMessage, {
-                  batchSize: 5,
-                  updateInterval: 30,
-                });
-              }
-
-              // Handle completion - check for both formats
-              if (json.done === true) {
-                // Final session update
-                if (sessionData.sessionId || json.sessionId) {
-                  const finalSessionId = sessionData.sessionId || json.sessionId;
-                  const finalMessageCount = sessionData.messageCount || json.messageCount;
-                  
-                  console.log("Streaming completed. Final session:", finalSessionId, "Message count:", finalMessageCount);
-                  
-                  // Update session history with final data
-                  sessionManager.saveSessionToHistory(finalSessionId, {
-                    messageCount: finalMessageCount,
-                    lastMessage: json.finalResponse || "Streaming response completed",
-                    lastTimestamp: new Date().toISOString(),
-                    tokenUsage: sessionData.tokenUsage || json.tokenUsage
-                  });
-                  
-                  // Ensure session ID is set if not already
-                  if (!sessionId && finalSessionId) {
-                    console.log("Setting final session ID:", finalSessionId);
-                    setSessionId(finalSessionId);
-                  }
-                }
-              }
-            } catch (e) {
-              console.error("Failed to parse chunk:", line, e);
-            }
-          }
-        }
-
-        // Final flush to ensure all content is displayed
-        flushStream(updateBotMessage);
-
-      } else {
-        // Handle non-streaming JSON response
-        const data = await chatAPI.sendMessage(messageText, sessionId, false);
-
-        // Set session ID if this was the first message
-        if (!sessionId && data.sessionId) {
-          setSessionId(data.sessionId);
-        }
-
-        // Add bot response to messages
-        if (data.response) {
-          const botMessage = {
-            sender: "bot",
-            text: data.response,
-            sessionId: data.sessionId,
-            messageCount: data.messageCount,
-            timestamp: new Date().toISOString(),
-            tokenUsage: data.tokenUsage,
-            cacheHit: data.cacheHit
+              return updated;
+            });
           };
 
-          setMessages((prev) => [...prev, botMessage]);
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
 
-          // Update session history
-          if (data.sessionId) {
-            sessionManager.saveSessionToHistory(data.sessionId, {
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk
+              .split("\n")
+              .filter((line) => line.trim().startsWith("data:"));
+
+            for (const line of lines) {
+              try {
+                const json = JSON.parse(line.replace(/^data:\s*/, ""));
+
+                // Handle session creation/metadata - check for both formats
+                if (json.sessionId) {
+                  if (!sessionId) {
+                    console.log(
+                      "Setting session ID from streaming:",
+                      json.sessionId
+                    );
+                    setSessionId(json.sessionId);
+                  }
+                  sessionData.sessionId = json.sessionId;
+                }
+
+                // Handle session creation type
+                if (json.type === "session_created" && json.sessionId) {
+                  if (!sessionId) {
+                    console.log(
+                      "Session created via streaming:",
+                      json.sessionId
+                    );
+                    setSessionId(json.sessionId);
+                  }
+                  sessionData.sessionId = json.sessionId;
+                }
+
+                if (json.messageCount) {
+                  sessionData.messageCount = json.messageCount;
+                }
+                if (json.tokenUsage) {
+                  sessionData.tokenUsage = json.tokenUsage;
+                }
+
+                if (json.chunk) {
+                  // First chunk - add bot message placeholder
+                  if (!botMessageAdded) {
+                    setMessages((prev) => [
+                      ...prev,
+                      {
+                        sender: USER_TYPE.BOT,
+                        text: "",
+                        sessionId: sessionData.sessionId,
+                        messageCount: sessionData.messageCount,
+                        timestamp: new Date().toISOString(),
+                      },
+                    ]);
+                    botMessageAdded = true;
+                    setHasFirstChunk(true);
+                  }
+
+                  // Use optimized streaming with batching
+                  addToStream(json.chunk, updateBotMessage, {
+                    batchSize: 5,
+                    updateInterval: 30,
+                  });
+                }
+
+                // Handle completion - check for both formats
+                if (json.done === true) {
+                  // Final session update
+                  if (sessionData.sessionId || json.sessionId) {
+                    const finalSessionId =
+                      sessionData.sessionId || json.sessionId;
+                    const finalMessageCount =
+                      sessionData.messageCount || json.messageCount;
+
+                    console.log(
+                      "Streaming completed. Final session:",
+                      finalSessionId,
+                      "Message count:",
+                      finalMessageCount
+                    );
+
+                    // Update session history with final data
+                    sessionManager.saveSessionToHistory(finalSessionId, {
+                      messageCount: finalMessageCount,
+                      lastMessage:
+                        json.finalResponse || "Streaming response completed",
+                      lastTimestamp: new Date().toISOString(),
+                      tokenUsage: sessionData.tokenUsage || json.tokenUsage,
+                    });
+
+                    // Ensure session ID is set if not already
+                    if (!sessionId && finalSessionId) {
+                      console.log("Setting final session ID:", finalSessionId);
+                      setSessionId(finalSessionId);
+                    }
+                  }
+                }
+              } catch (e) {
+                console.error("Failed to parse chunk:", line, e);
+              }
+            }
+          }
+
+          // Final flush to ensure all content is displayed
+          flushStream(updateBotMessage);
+        } else {
+          // Handle non-streaming JSON response
+          const data = await chatAPI.sendMessage(messageText, sessionId, false);
+
+          // Set session ID if this was the first message
+          if (!sessionId && data.sessionId) {
+            setSessionId(data.sessionId);
+          }
+
+          // Add bot response to messages
+          if (data.response) {
+            const botMessage = {
+              sender: USER_TYPE.BOT,
+              text: data.response,
+              sessionId: data.sessionId,
               messageCount: data.messageCount,
-              lastMessage: data.response,
-              lastTimestamp: botMessage.timestamp,
-              tokenUsage: data.tokenUsage
-            });
+              timestamp: new Date().toISOString(),
+              tokenUsage: data.tokenUsage,
+              cacheHit: data.cacheHit,
+            };
+
+            setMessages((prev) => [...prev, botMessage]);
+
+            // Update session history
+            if (data.sessionId) {
+              sessionManager.saveSessionToHistory(data.sessionId, {
+                messageCount: data.messageCount,
+                lastMessage: data.response,
+                lastTimestamp: botMessage.timestamp,
+                tokenUsage: data.tokenUsage,
+              });
+            }
           }
         }
+      } catch (error) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            sender: USER_TYPE.BOT,
+            text: "⚠️ Something went wrong. Please try again.",
+          },
+        ]);
+        console.error("Chat error:", error);
+      } finally {
+        setLoading(false);
+        resetStream();
       }
-
-    } catch (error) {
-      setMessages((prev) => [
-        ...prev,
-        { sender: "bot", text: "⚠️ Something went wrong. Please try again." },
-      ]);
-      console.error("Chat error:", error);
-    } finally {
-      setLoading(false);
-      resetStream();
-    }
-  }, [input, loading, sessionId, resetStream, addToStream, flushStream]);
+    },
+    [input, loading, sessionId, resetStream, addToStream, flushStream]
+  );
 
   // Function to clear session and start fresh
   const clearSession = useCallback(() => {
@@ -306,15 +315,6 @@ export const useChatLogic = (initialMessages, config) => {
     sessionLoadedRef.current = false; // Reset loading flags
     loadingSessionRef.current = false;
   }, []);
-
-  // Optimized scroll effect with debouncing
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 100);
-
-    return () => clearTimeout(timeoutId);
-  }, [messages.length, loading]);
 
   // Memoized input handlers
   const handleInputChange = useCallback((e) => {
@@ -338,6 +338,33 @@ export const useChatLogic = (initialMessages, config) => {
   // Memoize messages to prevent unnecessary re-renders
   const memoizedMessages = useMemo(() => messages, [messages]);
 
+  // Save session to localStorage when sessionId changes
+  useEffect(() => {
+    if (sessionId) {
+      console.log("Saving session to localStorage:", sessionId);
+      sessionManager.setSessionId(sessionId);
+    }
+  }, [sessionId]);
+
+  // Load session from localStorage on component mount - StrictMode safe
+  useEffect(() => {
+    const storedSessionId = sessionManager.getCurrentSessionId();
+    if (storedSessionId && !sessionLoadedRef.current) {
+      console.log("Found stored session ID:", storedSessionId);
+      setSessionId(storedSessionId);
+      loadSessionMessages(storedSessionId);
+    }
+  }, [loadSessionMessages]);
+
+  // Optimized scroll effect with debouncing
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+
+    return () => clearTimeout(timeoutId);
+  }, [messages.length, loading]);
+
   return {
     messages: memoizedMessages,
     input,
@@ -352,6 +379,6 @@ export const useChatLogic = (initialMessages, config) => {
     handleSendClick,
     sendMessage,
     clearSession,
-    loadSessionMessages
+    loadSessionMessages,
   };
 };
