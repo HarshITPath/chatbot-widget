@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "build:widget": "vite build --config vite.widget.config.js",
-    "build": "npm run build:widget",
+    "build:app": "vite build --config vite.config.js",
+    "build:all": "npm run build:widget && npm run build:app",
+    "build": "npm run build:all",
     "build:dev": "NODE_ENV=development npm run build",
     "build:prod": "NODE_ENV=production npm run build",
     "test:widget": "vite preview --outDir dist/widget --port 3001",

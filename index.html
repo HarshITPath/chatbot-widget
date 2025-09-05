@@ -1,12 +1,958 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Powered Chatbot</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI-Powered Chatbot Widget — Test Suite</title>
+    <meta name="description" content="AI-Powered Chatbot Widget - Advanced Testing Suite & Integration Demo" />
+    <meta name="keywords" content="chatbot, AI, widget, customer support, automation, testing" />
+    <meta name="author" content="AI Chatbot Widget" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="AI-Powered Chatbot Widget" />
+    <meta property="og:description" content="Advanced Testing Suite & Integration Demo for AI-powered chatbot widget" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:title" content="AI-Powered Chatbot Widget" />
+    <meta property="twitter:description" content="Advanced Testing Suite & Integration Demo" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+      :root { 
+        color-scheme: light dark; 
+        --primary: #1976d2;
+        --primary-dark: #1565c0;
+        --secondary: #dc004e;
+        --success: #4caf50;
+        --warning: #ff9800;
+        --error: #f44336;
+        --surface: #ffffff;
+        --surface-variant: #f5f5f5;
+        --on-surface: #1a1a1a;
+        --on-surface-variant: #666666;
+        --border: #e0e0e0;
+        --shadow: rgba(0,0,0,0.1);
+        --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      }
+      
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --surface: #121212;
+          --surface-variant: #1e1e1e;
+          --on-surface: #ffffff;
+          --on-surface-variant: #b0b0b0;
+          --border: #333333;
+          --shadow: rgba(0,0,0,0.3);
+        }
+      }
+
+      * { box-sizing: border-box; }
+      
+      body { 
+        font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
+        margin: 0; 
+        padding: 20px;
+        line-height: 1.6; 
+        background: var(--surface-variant);
+        color: var(--on-surface);
+        min-height: 100vh;
+      }
+
+      .header {
+        background: var(--gradient);
+        color: white;
+        padding: 2rem;
+        border-radius: 16px;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 8px 32px var(--shadow);
+      }
+
+      .header h1 { 
+        margin: 0 0 0.5rem; 
+        font-size: 2.5rem; 
+        font-weight: 700;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      }
+
+      .header .subtitle { 
+        font-size: 1.1rem; 
+        opacity: 0.9; 
+        font-weight: 300;
+      }
+
+      .instructions {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 2px 8px var(--shadow);
+      }
+
+      .instructions h3 {
+        margin: 0 0 1rem;
+        color: var(--primary);
+        font-weight: 600;
+      }
+
+      .step {
+        display: flex;
+        align-items: center;
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        background: var(--surface-variant);
+        border-radius: 8px;
+      }
+
+      .step-number {
+        background: var(--primary);
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-right: 1rem;
+        flex-shrink: 0;
+      }
+
+      .main-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+
+      @media (max-width: 768px) {
+        .main-container {
+          grid-template-columns: 1fr;
+        }
+        .header h1 { font-size: 2rem; }
+        body { padding: 1rem; }
+      }
+
+      .panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px var(--shadow);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .panel:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 30px var(--shadow);
+      }
+
+      .panel-header {
+        background: var(--gradient);
+        color: white;
+        padding: 1.5rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .panel-content {
+        padding: 1.5rem;
+      }
+
+      .config-grid { 
+        display: grid; 
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+        gap: 1rem; 
+        margin-bottom: 1.5rem;
+      }
+
+      .field { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 0.5rem; 
+      }
+
+      .field label { 
+        font-size: 0.9rem; 
+        font-weight: 600; 
+        color: var(--on-surface);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .field input, .field select, .field textarea { 
+        padding: 0.75rem; 
+        border-radius: 8px; 
+        border: 1px solid var(--border); 
+        background: var(--surface); 
+        color: var(--on-surface);
+        font-family: inherit;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .field input:focus, .field select:focus, .field textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+      }
+
+      .field input[type="color"] { 
+        padding: 0.25rem; 
+        height: 42px; 
+        cursor: pointer;
+      }
+
+      .field textarea { 
+        resize: vertical; 
+        min-height: 80px; 
+        font-size: 0.9rem;
+      }
+
+      .field.full-width {
+        grid-column: 1/-1;
+      }
+
+      .toolbar { 
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 0.75rem; 
+        margin-bottom: 1rem;
+      }
+
+      .btn { 
+        padding: 0.75rem 1.5rem; 
+        border-radius: 8px; 
+        border: 1px solid var(--border); 
+        background: var(--surface); 
+        cursor: pointer; 
+        font-weight: 600;
+        font-family: inherit;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        color: var(--on-surface);
+      }
+
+      .btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px var(--shadow);
+      }
+
+      .btn.primary { 
+        background: var(--primary); 
+        color: white; 
+        border-color: var(--primary); 
+      }
+
+      .btn.primary:hover {
+        background: var(--primary-dark);
+      }
+
+      .btn.success { 
+        background: var(--success); 
+        color: white; 
+        border-color: var(--success); 
+      }
+
+      .btn.warning { 
+        background: var(--warning); 
+        color: white; 
+        border-color: var(--warning); 
+      }
+
+      .btn.error { 
+        background: var(--error); 
+        color: white; 
+        border-color: var(--error); 
+      }
+
+      .btn.ghost { 
+        background: transparent; 
+        border-color: var(--border);
+      }
+
+      .btn:disabled { 
+        opacity: 0.6; 
+        cursor: not-allowed; 
+        transform: none !important;
+      }
+
+      .status-bar {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 1rem;
+        background: var(--surface-variant);
+        border-radius: 8px;
+        margin-top: 1rem;
+      }
+
+      .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: var(--error);
+        animation: pulse 2s infinite;
+      }
+
+      .status-indicator.loading {
+        background: var(--warning);
+      }
+
+      .status-indicator.ready {
+        background: var(--success);
+        animation: none;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      #log { 
+        font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace; 
+        font-size: 0.85rem; 
+        white-space: pre-wrap; 
+        background: #0a0a0a; 
+        color: #00ff88; 
+        padding: 1rem; 
+        border-radius: 8px; 
+        height: 300px; 
+        overflow: auto; 
+        border: 1px solid #333;
+        line-height: 1.4;
+      }
+
+      .log-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1rem;
+      }
+
+      .log-controls {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .preset-configs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .preset-card {
+        background: var(--surface-variant);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .preset-card:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-1px);
+      }
+
+      .preset-card h4 {
+        margin: 0 0 0.5rem;
+        font-weight: 600;
+      }
+
+      .preset-card p {
+        margin: 0;
+        font-size: 0.9rem;
+        opacity: 0.8;
+      }
+
+      .feature-showcase {
+        grid-column: 1/-1;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 2rem;
+        text-align: center;
+        margin-top: 2rem;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-top: 2rem;
+      }
+
+      .feature-item {
+        text-align: center;
+        padding: 1rem;
+      }
+
+      .feature-icon {
+        width: 48px;
+        height: 48px;
+        background: var(--gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+        color: white;
+        font-size: 1.5rem;
+      }
+
+      .analytics {
+        background: var(--surface-variant);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 1rem;
+      }
+
+      .metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+      }
+
+      .metric {
+        text-align: center;
+        padding: 0.75rem;
+        background: var(--surface);
+        border-radius: 6px;
+      }
+
+      .metric-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      .metric-label {
+        font-size: 0.8rem;
+        color: var(--on-surface-variant);
+      }
+    </style>
   </head>
   <body>
-    <!-- App mounts itself; no #root needed -->
-    <script type="module" src="/src/main.jsx"></script>
+    <div class="header">
+      <h1><i class="fas fa-robot"></i> AI-Powered Chatbot Widget</h1>
+      <div class="subtitle">Advanced Testing Suite & Integration Demo</div>
+    </div>
+
+    <div class="instructions">
+      <h3><i class="fas fa-list-check"></i> Quick Start Guide</h3>
+      <div class="step">
+        <div class="step-number">1</div>
+        <div>Build the widget: <code>npm run build:widget</code></div>
+      </div>
+      <div class="step">
+        <div class="step-number">2</div>
+        <div>Open this file in your browser or serve it locally</div>
+      </div>
+      <div class="step">
+        <div class="step-number">3</div>
+        <div>Configure your chatbot settings and click "Initialize Widget"</div>
+      </div>
+      <div class="step">
+        <div class="step-number">4</div>
+        <div>Test the widget functionality and monitor the logs</div>
+      </div>
+    </div>
+
+    <div class="main-container">
+      <div class="panel">
+        <div class="panel-header">
+          <i class="fas fa-cog"></i> Widget Configuration
+        </div>
+        <div class="panel-content">
+          <div class="preset-configs">
+            <div class="preset-card" onclick="loadPreset('development')">
+              <h4><i class="fas fa-laptop-code"></i> Development</h4>
+              <p>Local development setup with debug options</p>
+            </div>
+            <div class="preset-card" onclick="loadPreset('production')">
+              <h4><i class="fas fa-globe"></i> Production</h4>
+              <p>Production-ready configuration</p>
+            </div>
+            <div class="preset-card" onclick="loadPreset('demo')">
+              <h4><i class="fas fa-magic"></i> Demo Mode</h4>
+              <p>Showcase configuration with sample data</p>
+            </div>
+          </div>
+
+          <div class="config-grid">
+            <div class="field">
+              <label for="apiUrl"><i class="fas fa-link"></i> API URL</label>
+              <input id="apiUrl" type="url" placeholder="http://192.168.0.39:3000/api" />
+            </div>
+            <div class="field">
+              <label for="primaryColor"><i class="fas fa-palette"></i> Primary Color</label>
+              <input id="primaryColor" type="color" value="#1976d2" />
+            </div>
+            <div class="field">
+              <label for="secondaryColor"><i class="fas fa-brush"></i> Secondary Color</label>
+              <input id="secondaryColor" type="color" value="#dc004e" />
+            </div>
+            <div class="field">
+              <label for="botName"><i class="fas fa-robot"></i> Bot Name</label>
+              <input id="botName" type="text" value="AI Assistant" />
+            </div>
+            <div class="field">
+              <label for="position"><i class="fas fa-arrows-alt"></i> Position</label>
+              <select id="position">
+                <option value="bottom-right" selected>Bottom Right</option>
+                <option value="bottom-left">Bottom Left</option>
+                <option value="top-right">Top Right</option>
+                <option value="top-left">Top Left</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="buttonSize"><i class="fas fa-expand-arrows-alt"></i> Button Size (px)</label>
+              <input id="buttonSize" type="range" min="40" max="96" value="64" oninput="updateSizeDisplay(this.value)" />
+              <span id="sizeDisplay">64px</span>
+            </div>
+            <div class="field">
+              <label for="zIndex"><i class="fas fa-layer-group"></i> Z-Index</label>
+              <input id="zIndex" type="number" value="1300" />
+            </div>
+            <div class="field">
+              <label for="botAvatar"><i class="fas fa-user-robot"></i> Bot Avatar</label>
+              <input id="botAvatar" type="text" value="🤖" />
+            </div>
+            <div class="field">
+              <label for="userAvatar"><i class="fas fa-user"></i> User Avatar</label>
+              <input id="userAvatar" type="text" value="👤" />
+            </div>
+            <div class="field full-width">
+              <label for="greeting"><i class="fas fa-comment-dots"></i> Welcome Message</label>
+              <textarea id="greeting">👋 Hi! I'm your AI-powered assistant. How can I help you today?</textarea>
+            </div>
+            <div class="field full-width">
+              <label for="placeholder"><i class="fas fa-keyboard"></i> Input Placeholder</label>
+              <input id="placeholder" type="text" value="Type your message here..." />
+            </div>
+          </div>
+
+          <div class="toolbar">
+            <button id="initBtn" class="btn primary" type="button" disabled>
+              <i class="fas fa-play"></i> Initialize Widget
+            </button>
+            <button id="updateBtn" class="btn" type="button" disabled>
+              <i class="fas fa-sync"></i> Update Config
+            </button>
+            <button id="showBtn" class="btn success" type="button" disabled>
+              <i class="fas fa-eye"></i> Show
+            </button>
+            <button id="hideBtn" class="btn warning" type="button" disabled>
+              <i class="fas fa-eye-slash"></i> Hide
+            </button>
+            <button id="destroyBtn" class="btn error" type="button" disabled>
+              <i class="fas fa-trash"></i> Destroy
+            </button>
+          </div>
+
+          <div class="status-bar">
+            <div id="statusIndicator" class="status-indicator"></div>
+            <span id="status">Loading widget script...</span>
+          </div>
+
+          <div class="analytics">
+            <h4><i class="fas fa-chart-line"></i> Widget Analytics</h4>
+            <div class="metrics">
+              <div class="metric">
+                <div id="initCount" class="metric-value">0</div>
+                <div class="metric-label">Initializations</div>
+              </div>
+              <div class="metric">
+                <div id="showCount" class="metric-value">0</div>
+                <div class="metric-label">Shows</div>
+              </div>
+              <div class="metric">
+                <div id="configUpdates" class="metric-value">0</div>
+                <div class="metric-label">Config Updates</div>
+              </div>
+              <div class="metric">
+                <div id="errorCount" class="metric-value">0</div>
+                <div class="metric-label">Errors</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <i class="fas fa-terminal"></i> Debug Console
+        </div>
+        <div class="panel-content">
+          <div class="log-header">
+            <strong>Real-time Logs</strong>
+            <div class="log-controls">
+              <button id="clearLog" class="btn" type="button">
+                <i class="fas fa-broom"></i> Clear
+              </button>
+              <button id="exportLog" class="btn" type="button">
+                <i class="fas fa-download"></i> Export
+              </button>
+            </div>
+          </div>
+          <pre id="log" aria-live="polite">🚀 Widget Testing Suite Initialized
+⏳ Loading chatbot widget script...
+</pre>
+        </div>
+      </div>
+    </div>
+
+    <div class="feature-showcase">
+      <h2><i class="fas fa-star"></i> Widget Features</h2>
+      <div class="features-grid">
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-brain"></i></div>
+          <h4>AI-Powered</h4>
+          <p>Advanced natural language processing with contextual understanding</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
+          <h4>Responsive</h4>
+          <p>Optimized for all devices and screen sizes</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-palette"></i></div>
+          <h4>Customizable</h4>
+          <p>Fully themeable with brand colors and styling</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-bolt"></i></div>
+          <h4>Fast Loading</h4>
+          <p>Optimized bundle size and lazy loading</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+          <h4>Secure</h4>
+          <p>Enterprise-grade security and privacy protection</p>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon"><i class="fas fa-code"></i></div>
+          <h4>Easy Integration</h4>
+          <p>Simple embed code for any website</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Load the built UMD bundle with enhanced error handling -->
+    <script>
+      (function () {
+        const statusEl = document.getElementById('status');
+        const statusIndicator = document.getElementById('statusIndicator');
+        
+        function updateStatus(message, type = 'loading') {
+          statusEl.textContent = message;
+          statusIndicator.className = `status-indicator ${type}`;
+        }
+
+        updateStatus('Loading widget script...', 'loading');
+
+        var script = document.createElement('script');
+        script.src = './dist/widget/chatbot-widget.umd.js';
+        script.async = true;
+        
+        script.onload = function () {
+          updateStatus('Widget script loaded successfully!', 'ready');
+          logLine('✅ Widget script loaded successfully');
+          
+          // Enable controls
+          ['initBtn','updateBtn','showBtn','hideBtn','destroyBtn'].forEach(function(id){
+            var el = document.getElementById(id);
+            if (el) el.disabled = false;
+          });
+        };
+        
+        script.onerror = function () {
+          updateStatus('Failed to load widget script', 'error');
+          logLine('❌ Failed to load ./dist/widget/chatbot-widget.umd.js');
+          logLine('💡 Make sure you ran "npm run build:widget" first');
+          incrementErrorCount();
+        };
+        
+        document.body.appendChild(script);
+      })();
+    </script>
+
+    <!-- Enhanced widget management with analytics -->
+    <script>
+      const lsKey = 'chatbot-widget-test-config';
+      let analytics = {
+        initCount: 0,
+        showCount: 0,
+        configUpdates: 0,
+        errorCount: 0
+      };
+
+      // Preset configurations
+      const presets = {
+        development: {
+          apiUrl: 'http://localhost:3000/api',
+          primaryColor: '#2196f3',
+          secondaryColor: '#ff4081',
+          botName: 'DevBot',
+          greeting: '🛠️ Development mode active. Ready for testing!',
+          placeholder: 'Enter your test message...'
+        },
+        production: {
+          apiUrl: 'https://api.yoursite.com/chat',
+          primaryColor: '#1976d2',
+          secondaryColor: '#dc004e',
+          botName: 'Assistant',
+          greeting: '👋 Welcome! How can I assist you today?',
+          placeholder: 'Type your message...'
+        },
+        demo: {
+          apiUrl: 'https://demo-api.example.com',
+          primaryColor: '#9c27b0',
+          secondaryColor: '#ff5722',
+          botName: 'Demo AI',
+          greeting: '🌟 This is a demo of our AI chatbot. Try asking me anything!',
+          placeholder: 'Ask me anything...'
+        }
+      };
+
+      function logLine(msg, type = 'info') {
+        const el = document.getElementById('log');
+        const time = new Date().toLocaleTimeString();
+        const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️';
+        el.textContent += `[${time}] ${icon} ${msg}\n`;
+        el.scrollTop = el.scrollHeight;
+      }
+
+      function updateAnalytics() {
+        document.getElementById('initCount').textContent = analytics.initCount;
+        document.getElementById('showCount').textContent = analytics.showCount;
+        document.getElementById('configUpdates').textContent = analytics.configUpdates;
+        document.getElementById('errorCount').textContent = analytics.errorCount;
+      }
+
+      function incrementErrorCount() {
+        analytics.errorCount++;
+        updateAnalytics();
+      }
+
+      function updateSizeDisplay(value) {
+        document.getElementById('sizeDisplay').textContent = value + 'px';
+      }
+
+      function loadPreset(presetName) {
+        const config = presets[presetName];
+        if (config) {
+          writeConfigToForm(config);
+          logLine(`📋 Loaded ${presetName} preset configuration`, 'success');
+        }
+      }
+
+      function readConfigFromForm() {
+        const val = (id) => document.getElementById(id).value;
+        const num = (id) => Number(document.getElementById(id).value);
+        return {
+          apiUrl: val('apiUrl') || 'http://192.168.0.39:3000/api',
+          primaryColor: val('primaryColor') || '#1976d2',
+          secondaryColor: val('secondaryColor') || '#dc004e',
+          botName: val('botName') || 'AI Assistant',
+          botAvatar: val('botAvatar') || '🤖',
+          userAvatar: val('userAvatar') || '👤',
+          position: val('position') || 'bottom-right',
+          buttonSize: num('buttonSize') || 64,
+          zIndex: num('zIndex') || 1300,
+          greeting: val('greeting') || '👋 Hi! I\'m your AI-powered assistant. How can I help you today?',
+          placeholder: val('placeholder') || 'Type your message here...',
+        };
+      }
+
+      function writeConfigToForm(cfg) {
+        const set = (id, v) => { 
+          const el = document.getElementById(id); 
+          if (el && v !== undefined) el.value = v; 
+        };
+        set('apiUrl', cfg.apiUrl);
+        set('primaryColor', cfg.primaryColor);
+        set('secondaryColor', cfg.secondaryColor);
+        set('botName', cfg.botName);
+        set('botAvatar', cfg.botAvatar);
+        set('userAvatar', cfg.userAvatar);
+        set('position', cfg.position);
+        set('buttonSize', cfg.buttonSize);
+        set('zIndex', cfg.zIndex);
+        set('greeting', cfg.greeting);
+        set('placeholder', cfg.placeholder);
+        
+        // Update size display
+        if (cfg.buttonSize) updateSizeDisplay(cfg.buttonSize);
+      }
+
+      function persist(cfg) {
+        try { 
+          localStorage.setItem(lsKey, JSON.stringify(cfg)); 
+          localStorage.setItem(lsKey + '-analytics', JSON.stringify(analytics));
+        } catch (e) {
+          logLine('Failed to save configuration to localStorage', 'error');
+        }
+      }
+
+      function restore() {
+        try { 
+          const config = localStorage.getItem(lsKey);
+          const analyticsData = localStorage.getItem(lsKey + '-analytics');
+          
+          if (analyticsData) {
+            analytics = { ...analytics, ...JSON.parse(analyticsData) };
+            updateAnalytics();
+          }
+          
+          if (config) return JSON.parse(config);
+        } catch (e) {
+          logLine('Failed to restore configuration from localStorage', 'warning');
+        }
+        return null;
+      }
+
+      function initWidget() {
+        const statusEl = document.getElementById('status');
+        if (!window.ChatbotWidget || typeof window.ChatbotWidget.init !== 'function') {
+          statusEl.textContent = 'ChatbotWidget not available. Please refresh the page.';
+          logLine('ChatbotWidget global object not found', 'error');
+          incrementErrorCount();
+          return;
+        }
+
+        const cfg = readConfigFromForm();
+        persist(cfg);
+
+        try {
+          window.ChatbotWidget.init(cfg);
+          statusEl.textContent = '✅ Widget initialized successfully!';
+          logLine('🚀 Widget initialized with configuration:', 'success');
+          logLine(JSON.stringify(cfg, null, 2));
+          analytics.initCount++;
+          updateAnalytics();
+        } catch (e) {
+          console.error(e);
+          const errorMsg = e && e.message ? e.message : String(e);
+          statusEl.textContent = '❌ Initialization error: ' + errorMsg;
+          logLine('Initialization failed: ' + errorMsg, 'error');
+          incrementErrorCount();
+        }
+      }
+
+      function updateConfig() {
+        const cfg = readConfigFromForm();
+        persist(cfg);
+        
+        if (window.ChatbotWidget?.updateConfig) {
+          try {
+            window.ChatbotWidget.updateConfig(cfg);
+            logLine('🔄 Configuration updated successfully', 'success');
+            analytics.configUpdates++;
+            updateAnalytics();
+          } catch (e) {
+            logLine('Failed to update configuration: ' + (e.message || e), 'error');
+            incrementErrorCount();
+          }
+        } else {
+          logLine('Update function not available. Initialize widget first.', 'warning');
+        }
+      }
+
+      function showWidget() { 
+        try {
+          window.ChatbotWidget?.show?.(); 
+          logLine('👁️ Widget shown', 'success');
+          analytics.showCount++;
+          updateAnalytics();
+        } catch (e) {
+          logLine('Failed to show widget: ' + (e.message || e), 'error');
+          incrementErrorCount();
+        }
+      }
+
+      function hideWidget() { 
+        try {
+          window.ChatbotWidget?.hide?.(); 
+          logLine('🙈 Widget hidden', 'success');
+        } catch (e) {
+          logLine('Failed to hide widget: ' + (e.message || e), 'error');
+          incrementErrorCount();
+        }
+      }
+
+      function destroyWidget() { 
+        try {
+          window.ChatbotWidget?.destroy?.(); 
+          logLine('💥 Widget destroyed', 'success');
+        } catch (e) {
+          logLine('Failed to destroy widget: ' + (e.message || e), 'error');
+          incrementErrorCount();
+        }
+      }
+
+      function clearLog() {
+        document.getElementById('log').textContent = '🧹 Log cleared\n';
+      }
+
+      function exportLog() {
+        const logContent = document.getElementById('log').textContent;
+        const blob = new Blob([logContent], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `chatbot-widget-log-${new Date().toISOString().slice(0,19).replace(/[:.]/g, '-')}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        logLine('📁 Log exported successfully', 'success');
+      }
+
+      // Event listeners
+      document.getElementById('initBtn').addEventListener('click', initWidget);
+      document.getElementById('updateBtn').addEventListener('click', updateConfig);
+      document.getElementById('showBtn').addEventListener('click', showWidget);
+      document.getElementById('hideBtn').addEventListener('click', hideWidget);
+      document.getElementById('destroyBtn').addEventListener('click', destroyWidget);
+      document.getElementById('clearLog').addEventListener('click', clearLog);
+      document.getElementById('exportLog').addEventListener('click', exportLog);
+      
+      // Auto-save configuration on change
+      document.querySelectorAll('input, select, textarea').forEach(el => {
+        el.addEventListener('change', () => {
+          const cfg = readConfigFromForm();
+          persist(cfg);
+        });
+      });
+
+      // Initialize
+      document.addEventListener('DOMContentLoaded', () => {
+        const restored = restore();
+        if (restored) {
+          writeConfigToForm(restored);
+          logLine('⚡ Previous configuration restored', 'success');
+        }
+        updateAnalytics();
+      });
+    </script>
   </body>
-  </html>
+</html>

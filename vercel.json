@@ -1,7 +1,17 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build:all",
   "outputDirectory": "dist",
+  "routes": [
+    {
+      "src": "/widget/chatbot-widget.umd.js",
+      "dest": "/widget/chatbot-widget.umd.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
   "headers": [
     {
       "source": "/widget/chatbot-widget.umd.js",
@@ -21,6 +31,15 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=3600"
         }
       ]
     }
