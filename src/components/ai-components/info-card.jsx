@@ -12,26 +12,10 @@ import {
   Stack,
   useTheme,
 } from "@mui/material";
-import {
-  OpenInNew as OpenInNewIcon,
-  Person as PersonIcon,
-  Business as BusinessIcon,
-  LocationOn as LocationIcon,
-  Schedule as ScheduleIcon,
-  CalendarToday as CalendarIcon,
-  Work as WorkIcon,
-  Star as StarIcon,
-  Email as EmailIcon,
-  Phone as PhoneIcon,
-  Language as WebsiteIcon,
-  Article as ArticleIcon,
-  Assessment as CaseStudyIcon,
-  FormatQuote as TestimonialIcon,
-  Build as ServiceIcon,
-  Folder as PortfolioIcon,
-} from "@mui/icons-material";
+import { ICONS } from "../../assets/icons";
 
 export const InfoCard = ({ data }) => {
+  console.log('data', data)
   const theme = useTheme();
 
   if (!data) {
@@ -134,7 +118,7 @@ export const InfoCard = ({ data }) => {
         color: theme.palette.primary.main,
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
-        icon: <ArticleIcon sx={{ fontSize: 18 }} />,
+        icon: <ICONS.ARTICLE sx={{ fontSize: 18 }} />,
         label: "Blog Post",
         buttonText: "Read More",
         buttonColor: theme.palette.primary.main,
@@ -143,7 +127,7 @@ export const InfoCard = ({ data }) => {
         color: theme.palette.primary.main,
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
-        icon: <WorkIcon sx={{ fontSize: 18 }} />,
+        icon: <ICONS.WORK sx={{ fontSize: 18 }} />,
         label: "Job Opening",
         buttonText: "Apply Now",
         buttonColor: theme.palette.primary.main,
@@ -152,7 +136,7 @@ export const InfoCard = ({ data }) => {
         color: theme.palette.primary.main,
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
-        icon: <TestimonialIcon sx={{ fontSize: 18 }} />,
+        icon: <ICONS.TESTIMONIAL sx={{ fontSize: 18 }} />,
         label: "Client Testimonial",
         buttonText: "View More",
         buttonColor: theme.palette.primary.main,
@@ -161,7 +145,7 @@ export const InfoCard = ({ data }) => {
         color: theme.palette.primary.main,
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
-        icon: <CaseStudyIcon sx={{ fontSize: 18 }} />,
+        icon: <ICONS.CASE_STUDY sx={{ fontSize: 18 }} />,
         label: "Case Study",
         buttonText: "View Case Study",
         buttonColor: theme.palette.primary.main,
@@ -170,7 +154,7 @@ export const InfoCard = ({ data }) => {
         color: theme.palette.primary.main,
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
-        icon: <EmailIcon sx={{ fontSize: 18 }} />,
+        icon: <ICONS.EMAIL sx={{ fontSize: 18 }} />,
         label: "Contact Info",
         buttonText: "Get In Touch",
         buttonColor: theme.palette.primary.main,
@@ -179,7 +163,7 @@ export const InfoCard = ({ data }) => {
         color: theme.palette.primary.main,
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
-        icon: <PortfolioIcon sx={{ fontSize: 18 }} />,
+        icon: <ICONS.PORTFOLIO sx={{ fontSize: 18 }} />,
         label: "Portfolio Item",
         buttonText: "View Project",
         buttonColor: theme.palette.primary.main,
@@ -188,7 +172,7 @@ export const InfoCard = ({ data }) => {
         color: theme.palette.primary.main,
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
-        icon: <ServiceIcon sx={{ fontSize: 18 }} />,
+        icon: <ICONS.BUILD sx={{ fontSize: 18 }} />,
         label: "Service",
         buttonText: "Request Demo",
         buttonColor: theme.palette.primary.main,
@@ -197,7 +181,7 @@ export const InfoCard = ({ data }) => {
         color: theme.palette.text.secondary,
         bgColor: theme.palette.grey?.[50] || "#f5f5f5",
         borderColor: theme.palette.text.secondary,
-        icon: <ArticleIcon sx={{ fontSize: 18 }} />,
+        icon: <ICONS.ARTICLE sx={{ fontSize: 18 }} />,
         label: "Information",
         buttonText: "Learn More",
         buttonColor: theme.palette.primary.main,
@@ -244,23 +228,23 @@ export const InfoCard = ({ data }) => {
   const getFieldIcon = (key) => {
     const lowerKey = key.toLowerCase();
     if (lowerKey.includes("author") || lowerKey.includes("client"))
-      return <PersonIcon fontSize="small" />;
+      return <ICONS.PERSON fontSize="small" />;
     if (lowerKey.includes("company") || lowerKey.includes("organization"))
-      return <BusinessIcon fontSize="small" />;
+      return <ICONS.BUSINESS fontSize="small" />;
     if (lowerKey.includes("location") || lowerKey.includes("address"))
-      return <LocationIcon fontSize="small" />;
+      return <ICONS.LOCATIONS fontSize="small" />;
     if (lowerKey.includes("date") || lowerKey.includes("posted"))
-      return <CalendarIcon fontSize="small" />;
+      return <ICONS.CALENDAR fontSize="small" />;
     if (lowerKey.includes("experience") || lowerKey.includes("years"))
-      return <WorkIcon fontSize="small" />;
+      return <ICONS.WORK fontSize="small" />;
     if (lowerKey.includes("time") || lowerKey.includes("duration"))
-      return <ScheduleIcon fontSize="small" />;
+      return <ICONS.SCHEDULE fontSize="small" />;
     if (lowerKey.includes("rating") || lowerKey.includes("score"))
-      return <StarIcon fontSize="small" />;
-    if (lowerKey.includes("email")) return <EmailIcon fontSize="small" />;
-    if (lowerKey.includes("phone")) return <PhoneIcon fontSize="small" />;
+      return <ICONS.STAR fontSize="small" />;
+    if (lowerKey.includes("email")) return <ICONS.EMAIL fontSize="small" />;
+    if (lowerKey.includes("phone")) return <ICONS.PHONE fontSize="small" />;
     if (lowerKey.includes("website") || lowerKey.includes("link"))
-      return <WebsiteIcon fontSize="small" />;
+      return <ICONS.WEBSITE fontSize="small" />;
     return null;
   };
 
@@ -492,7 +476,7 @@ export const InfoCard = ({ data }) => {
           <Button
             variant="contained"
             fullWidth
-            endIcon={<OpenInNewIcon fontSize="small" />}
+            endIcon={<ICONS.OPEN_IN_NEW fontSize="small" />}
             href={link}
             target="_blank"
             rel="noopener noreferrer"
