@@ -36,11 +36,13 @@ const InfoCard = ({ data }) => {
         )}
 
         {fields.length > 0 && (
+          <Box mb={1}>
             <Stack spacing={1}>
               {fields.map((field, idx) => (
                 <InfoCardField key={idx} {...{ field, typeConfig }} />
               ))}
             </Stack>
+            </Box>
         )}
 
         {link && (
