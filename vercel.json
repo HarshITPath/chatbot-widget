@@ -2,14 +2,14 @@
   "version": 2,
   "buildCommand": "npm run build:all",
   "outputDirectory": "dist",
-  "routes": [
+  "rewrites": [
     {
-      "src": "/widget/chatbot-widget.umd.js",
-      "dest": "/widget/chatbot-widget.umd.js"
+      "source": "/widget/chatbot-widget.umd.js",
+      "destination": "/widget/chatbot-widget.umd.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/index.html"
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ],
   "headers": [
