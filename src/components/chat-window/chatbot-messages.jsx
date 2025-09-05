@@ -1,6 +1,6 @@
 import { Avatar, Box, Typography } from "@mui/material";
 import { memo } from "react";
-import { AIResponseRenderer } from "../ai-response-renderer";
+import { AIResponseRenderer } from "../ai-response";
 import { USER_TYPE } from "../../utils/constant";
 
 const MessageItem = memo(({ msg, botAvatar, userAvatar, config }) => {

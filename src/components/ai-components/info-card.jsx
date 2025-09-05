@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Card,
   CardContent,
@@ -10,8 +10,8 @@ import {
   Link as MuiLink,
   Divider,
   Stack,
-  useTheme
-} from '@mui/material';
+  useTheme,
+} from "@mui/material";
 import {
   OpenInNew as OpenInNewIcon,
   Person as PersonIcon,
@@ -28,12 +28,12 @@ import {
   Assessment as CaseStudyIcon,
   FormatQuote as TestimonialIcon,
   Build as ServiceIcon,
-  Folder as PortfolioIcon
-} from '@mui/icons-material';
+  Folder as PortfolioIcon,
+} from "@mui/icons-material";
 
 export const InfoCard = ({ data }) => {
   const theme = useTheme();
-  
+
   if (!data) {
     return null;
   }
@@ -67,28 +67,62 @@ export const InfoCard = ({ data }) => {
   // Auto-detect content type based on data structure
   const detectContentType = () => {
     if (type) return type; // Use explicit type if provided
-    
+
     // Auto-detect based on field patterns
-    if (author && (date || fields.some(f => f.key.toLowerCase().includes('posted')))) {
-      return 'blog';
+    if (
+      author &&
+      (date || fields.some((f) => f.key.toLowerCase().includes("posted")))
+    ) {
+      return "blog";
     }
-    if (company && (experience || salary || fields.some(f => f.key.toLowerCase().includes('experience')))) {
-      return 'job';
+    if (
+      company &&
+      (experience ||
+        salary ||
+        fields.some((f) => f.key.toLowerCase().includes("experience")))
+    ) {
+      return "job";
     }
-    if (quote || content || fields.some(f => f.key.toLowerCase().includes('quote') || f.key.toLowerCase().includes('testimonial'))) {
-      return 'testimonial';
+    if (
+      quote ||
+      content ||
+      fields.some(
+        (f) =>
+          f.key.toLowerCase().includes("quote") ||
+          f.key.toLowerCase().includes("testimonial")
+      )
+    ) {
+      return "testimonial";
     }
-    if (client || fields.some(f => f.key.toLowerCase().includes('client') || f.key.toLowerCase().includes('description'))) {
-      return 'case_study';
+    if (
+      client ||
+      fields.some(
+        (f) =>
+          f.key.toLowerCase().includes("client") ||
+          f.key.toLowerCase().includes("description")
+      )
+    ) {
+      return "case_study";
     }
-    if (email || phone || fields.some(f => f.key.toLowerCase().includes('email') || f.key.toLowerCase().includes('phone'))) {
-      return 'contact';
+    if (
+      email ||
+      phone ||
+      fields.some(
+        (f) =>
+          f.key.toLowerCase().includes("email") ||
+          f.key.toLowerCase().includes("phone")
+      )
+    ) {
+      return "contact";
     }
-    if (technologies || fields.some(f => f.key.toLowerCase().includes('technolog'))) {
-      return 'portfolio';
+    if (
+      technologies ||
+      fields.some((f) => f.key.toLowerCase().includes("technolog"))
+    ) {
+      return "portfolio";
     }
-    
-    return 'general'; // Default type
+
+    return "general"; // Default type
   };
 
   const contentType = detectContentType();
@@ -101,75 +135,75 @@ export const InfoCard = ({ data }) => {
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
         icon: <ArticleIcon sx={{ fontSize: 18 }} />,
-        label: 'Blog Post',
-        buttonText: 'Read More',
-        buttonColor: theme.palette.primary.main
+        label: "Blog Post",
+        buttonText: "Read More",
+        buttonColor: theme.palette.primary.main,
       },
       job: {
         color: theme.palette.primary.main,
-          bgColor: `${theme.palette.primary.main}08`,
-          borderColor: theme.palette.primary.main,
+        bgColor: `${theme.palette.primary.main}08`,
+        borderColor: theme.palette.primary.main,
         icon: <WorkIcon sx={{ fontSize: 18 }} />,
-        label: 'Job Opening',
-        buttonText: 'Apply Now',
-        buttonColor: theme.palette.primary.main
+        label: "Job Opening",
+        buttonText: "Apply Now",
+        buttonColor: theme.palette.primary.main,
       },
       testimonial: {
-          color: theme.palette.primary.main,
-          bgColor: `${theme.palette.primary.main}08`,
-          borderColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
+        bgColor: `${theme.palette.primary.main}08`,
+        borderColor: theme.palette.primary.main,
         icon: <TestimonialIcon sx={{ fontSize: 18 }} />,
-        label: 'Client Testimonial',
-        buttonText: 'View More',
-        buttonColor: theme.palette.primary.main
+        label: "Client Testimonial",
+        buttonText: "View More",
+        buttonColor: theme.palette.primary.main,
       },
       case_study: {
         color: theme.palette.primary.main,
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
         icon: <CaseStudyIcon sx={{ fontSize: 18 }} />,
-        label: 'Case Study',
-        buttonText: 'View Case Study',
-        buttonColor: theme.palette.primary.main
+        label: "Case Study",
+        buttonText: "View Case Study",
+        buttonColor: theme.palette.primary.main,
       },
       contact: {
         color: theme.palette.primary.main,
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
         icon: <EmailIcon sx={{ fontSize: 18 }} />,
-        label: 'Contact Info',
-        buttonText: 'Get In Touch',
-        buttonColor: theme.palette.primary.main
+        label: "Contact Info",
+        buttonText: "Get In Touch",
+        buttonColor: theme.palette.primary.main,
       },
       portfolio: {
-          color: theme.palette.primary.main,
-          bgColor: `${theme.palette.primary.main}08`,
-          borderColor: theme.palette.primary.main,
+        color: theme.palette.primary.main,
+        bgColor: `${theme.palette.primary.main}08`,
+        borderColor: theme.palette.primary.main,
         icon: <PortfolioIcon sx={{ fontSize: 18 }} />,
-        label: 'Portfolio Item',
-        buttonText: 'View Project',
-          buttonColor: theme.palette.primary.main
+        label: "Portfolio Item",
+        buttonText: "View Project",
+        buttonColor: theme.palette.primary.main,
       },
       service: {
         color: theme.palette.primary.main,
         bgColor: `${theme.palette.primary.main}08`,
         borderColor: theme.palette.primary.main,
         icon: <ServiceIcon sx={{ fontSize: 18 }} />,
-        label: 'Service',
-        buttonText: 'Request Demo',
-        buttonColor: theme.palette.primary.main
+        label: "Service",
+        buttonText: "Request Demo",
+        buttonColor: theme.palette.primary.main,
       },
       general: {
         color: theme.palette.text.secondary,
-        bgColor: theme.palette.grey?.[50] || '#f5f5f5',
+        bgColor: theme.palette.grey?.[50] || "#f5f5f5",
         borderColor: theme.palette.text.secondary,
         icon: <ArticleIcon sx={{ fontSize: 18 }} />,
-        label: 'Information',
-        buttonText: 'Learn More',
-        buttonColor: theme.palette.primary.main
-      }
+        label: "Information",
+        buttonText: "Learn More",
+        buttonColor: theme.palette.primary.main,
+      },
     };
-    
+
     return configs[type] || configs.general;
   };
 
@@ -177,30 +211,30 @@ export const InfoCard = ({ data }) => {
 
   // Create fields array from both fields property and direct properties
   const allFields = [...fields];
-  
+
   // Add direct properties as fields if they don't exist in fields array
-  const fieldKeys = fields?.map(f => f.key?.toLowerCase());
-  
-  if (author && !fieldKeys.includes('author')) {
-    allFields.push({ key: 'Author', value: author });
+  const fieldKeys = fields?.map((f) => f.key?.toLowerCase());
+
+  if (author && !fieldKeys.includes("author")) {
+    allFields.push({ key: "Author", value: author });
   }
-  if (company && !fieldKeys.includes('company')) {
-    allFields.push({ key: 'Company', value: company });
+  if (company && !fieldKeys.includes("company")) {
+    allFields.push({ key: "Company", value: company });
   }
-  if (location && !fieldKeys.includes('location')) {
-    allFields.push({ key: 'Location', value: location });
+  if (location && !fieldKeys.includes("location")) {
+    allFields.push({ key: "Location", value: location });
   }
-  if (date && !fieldKeys.includes('date') && !fieldKeys.includes('posted on')) {
-    allFields.push({ key: 'Date', value: date });
+  if (date && !fieldKeys.includes("date") && !fieldKeys.includes("posted on")) {
+    allFields.push({ key: "Date", value: date });
   }
-  if (experience && !fieldKeys.includes('experience')) {
-    allFields.push({ key: 'Experience', value: experience });
+  if (experience && !fieldKeys.includes("experience")) {
+    allFields.push({ key: "Experience", value: experience });
   }
-  if (salary && !fieldKeys.includes('salary')) {
-    allFields.push({ key: 'Salary', value: salary });
+  if (salary && !fieldKeys.includes("salary")) {
+    allFields.push({ key: "Salary", value: salary });
   }
-  if (client && !fieldKeys.includes('client')) {
-    allFields.push({ key: 'Client', value: client });
+  if (client && !fieldKeys.includes("client")) {
+    allFields.push({ key: "Client", value: client });
   }
 
   // Handle content/quote/description
@@ -209,16 +243,24 @@ export const InfoCard = ({ data }) => {
   // Get icon for field key
   const getFieldIcon = (key) => {
     const lowerKey = key.toLowerCase();
-    if (lowerKey.includes('author') || lowerKey.includes('client')) return <PersonIcon fontSize="small" />;
-    if (lowerKey.includes('company') || lowerKey.includes('organization')) return <BusinessIcon fontSize="small" />;
-    if (lowerKey.includes('location') || lowerKey.includes('address')) return <LocationIcon fontSize="small" />;
-    if (lowerKey.includes('date') || lowerKey.includes('posted')) return <CalendarIcon fontSize="small" />;
-    if (lowerKey.includes('experience') || lowerKey.includes('years')) return <WorkIcon fontSize="small" />;
-    if (lowerKey.includes('time') || lowerKey.includes('duration')) return <ScheduleIcon fontSize="small" />;
-    if (lowerKey.includes('rating') || lowerKey.includes('score')) return <StarIcon fontSize="small" />;
-    if (lowerKey.includes('email')) return <EmailIcon fontSize="small" />;
-    if (lowerKey.includes('phone')) return <PhoneIcon fontSize="small" />;
-    if (lowerKey.includes('website') || lowerKey.includes('link')) return <WebsiteIcon fontSize="small" />;
+    if (lowerKey.includes("author") || lowerKey.includes("client"))
+      return <PersonIcon fontSize="small" />;
+    if (lowerKey.includes("company") || lowerKey.includes("organization"))
+      return <BusinessIcon fontSize="small" />;
+    if (lowerKey.includes("location") || lowerKey.includes("address"))
+      return <LocationIcon fontSize="small" />;
+    if (lowerKey.includes("date") || lowerKey.includes("posted"))
+      return <CalendarIcon fontSize="small" />;
+    if (lowerKey.includes("experience") || lowerKey.includes("years"))
+      return <WorkIcon fontSize="small" />;
+    if (lowerKey.includes("time") || lowerKey.includes("duration"))
+      return <ScheduleIcon fontSize="small" />;
+    if (lowerKey.includes("rating") || lowerKey.includes("score"))
+      return <StarIcon fontSize="small" />;
+    if (lowerKey.includes("email")) return <EmailIcon fontSize="small" />;
+    if (lowerKey.includes("phone")) return <PhoneIcon fontSize="small" />;
+    if (lowerKey.includes("website") || lowerKey.includes("link"))
+      return <WebsiteIcon fontSize="small" />;
     return null;
   };
 
@@ -228,7 +270,7 @@ export const InfoCard = ({ data }) => {
     const lowerKey = key.toLowerCase();
 
     // Handle special formatting for certain field types
-    if (lowerKey.includes('rating') && !isNaN(parseFloat(value))) {
+    if (lowerKey.includes("rating") && !isNaN(parseFloat(value))) {
       return (
         <Box display="flex" alignItems="center" gap={1}>
           <Rating value={parseFloat(value)} readOnly size="small" />
@@ -239,7 +281,7 @@ export const InfoCard = ({ data }) => {
       );
     }
 
-    if (lowerKey.includes('email') && value.includes('@')) {
+    if (lowerKey.includes("email") && value.includes("@")) {
       return (
         <MuiLink href={`mailto:${value}`} color="primary" underline="hover">
           {value}
@@ -247,7 +289,7 @@ export const InfoCard = ({ data }) => {
       );
     }
 
-    if (lowerKey.includes('phone') && /[\d\s\-\(\)+]/.test(value)) {
+    if (lowerKey.includes("phone") && /[\d\s\-\(\)+]/.test(value)) {
       return (
         <MuiLink href={`tel:${value}`} color="primary" underline="hover">
           {value}
@@ -255,14 +297,16 @@ export const InfoCard = ({ data }) => {
       );
     }
 
-    if ((lowerKey.includes('website') || lowerKey.includes('link')) && 
-        (value.startsWith('http') || value.startsWith('www'))) {
+    if (
+      (lowerKey.includes("website") || lowerKey.includes("link")) &&
+      (value.startsWith("http") || value.startsWith("www"))
+    ) {
       return (
-        <MuiLink 
-          href={value.startsWith('http') ? value : `https://${value}`} 
-          target="_blank" 
+        <MuiLink
+          href={value.startsWith("http") ? value : `https://${value}`}
+          target="_blank"
           rel="noopener noreferrer"
-          color="primary" 
+          color="primary"
           underline="hover"
         >
           {value}
@@ -270,25 +314,32 @@ export const InfoCard = ({ data }) => {
       );
     }
 
-    if (lowerKey.includes('technologies') || lowerKey.includes('skills') || lowerKey.includes('tags')) {
-      const items = value.split(/[,;|]/)?.map(item => item.trim()).filter(Boolean);
+    if (
+      lowerKey.includes("technologies") ||
+      lowerKey.includes("skills") ||
+      lowerKey.includes("tags")
+    ) {
+      const items = value
+        .split(/[,;|]/)
+        ?.map((item) => item.trim())
+        .filter(Boolean);
       if (items.length > 1) {
         return (
           <Box display="flex" flexWrap="wrap" gap={0.5}>
             {items?.map((item, index) => (
-              <Chip 
-                key={index} 
-                label={item} 
-                size="small" 
-                variant="outlined" 
-                sx={{ 
-                  fontSize: '0.7rem', 
+              <Chip
+                key={index}
+                label={item}
+                size="small"
+                variant="outlined"
+                sx={{
+                  fontSize: "0.7rem",
                   height: 22,
                   borderColor: typeConfig.color,
                   color: typeConfig.color,
-                  '&:hover': {
-                    backgroundColor: typeConfig.bgColor
-                  }
+                  "&:hover": {
+                    backgroundColor: typeConfig.bgColor,
+                  },
                 }}
               />
             ))}
@@ -298,21 +349,31 @@ export const InfoCard = ({ data }) => {
     }
 
     // Handle responsibilities or long descriptions with bullet points
-    if (lowerKey.includes('responsibilities') || lowerKey.includes('description')) {
+    if (
+      lowerKey.includes("responsibilities") ||
+      lowerKey.includes("description")
+    ) {
       // Check if it's a multi-line string with bullet points
-      if (value.includes('|') || value.includes('\n-') || value.includes('- ')) {
-        const lines = value.split(/\||\n/)?.map(line => line.trim()).filter(Boolean);
+      if (
+        value.includes("|") ||
+        value.includes("\n-") ||
+        value.includes("- ")
+      ) {
+        const lines = value
+          .split(/\||\n/)
+          ?.map((line) => line.trim())
+          .filter(Boolean);
         return (
           <Box component="ul" sx={{ m: 0, pl: 2 }}>
             {lines?.map((line, index) => (
-              <Typography 
-                key={index} 
-                component="li" 
-                variant="body2" 
+              <Typography
+                key={index}
+                component="li"
+                variant="body2"
                 color="text.secondary"
-                sx={{ mb: 0.5, fontSize: '0.85rem', lineHeight: 1.4 }}
+                sx={{ mb: 0.5, fontSize: "0.85rem", lineHeight: 1.4 }}
               >
-                {line.replace(/^[-•]\s*/, '')}
+                {line.replace(/^[-•]\s*/, "")}
               </Typography>
             ))}
           </Box>
@@ -323,15 +384,20 @@ export const InfoCard = ({ data }) => {
     // Handle long text content (likely quotes or descriptions)
     if (value.length > 100) {
       return (
-        <Typography 
+        <Typography
           variant="subtitle1"
-          color="text.secondary" 
-          sx={{ 
-            fontStyle: lowerKey.includes('quote') || lowerKey.includes('testimonial') ? 'italic' : 'normal',
-            whiteSpace: 'pre-wrap'
+          color="text.secondary"
+          sx={{
+            fontStyle:
+              lowerKey.includes("quote") || lowerKey.includes("testimonial")
+                ? "italic"
+                : "normal",
+            whiteSpace: "pre-wrap",
           }}
         >
-          {(lowerKey.includes('quote') || lowerKey.includes('testimonial')) ? `"${value}"` : value}
+          {lowerKey.includes("quote") || lowerKey.includes("testimonial")
+            ? `"${value}"`
+            : value}
         </Typography>
       );
     }
@@ -344,22 +410,23 @@ export const InfoCard = ({ data }) => {
   };
 
   return (
-    <Card 
-      variant="outlined" 
-      sx={{ 
-        mb: 2, 
+    <Card
+      variant="outlined"
+      sx={{
         borderRadius: 1.5,
         border: `1px solid ${theme.palette.divider}`,
+        "& > *:first-of-type": { mt: 0 },
+        "& > *:last-child": { mb: 0 },
       }}
     >
       <CardContent sx={{ p: 2 }}>
         {/* Title */}
         {title && (
-          <Typography 
-            variant="subtitle1" 
-            sx={{ 
-              fontWeight: 600, 
-              mb: 1.5
+          <Typography
+            variant="subtitle1"
+            sx={{
+              fontWeight: 600,
+              mb: 1.5,
             }}
           >
             {title}
@@ -368,12 +435,12 @@ export const InfoCard = ({ data }) => {
 
         {/* Main Content */}
         {mainContent && (
-          <Typography 
-            variant="subtitle1" 
+          <Typography
+            variant="subtitle1"
             color="text.secondary"
-            sx={{ 
+            sx={{
               mb: 2,
-              fontStyle: quote ? 'italic' : 'normal'
+              fontStyle: quote ? "italic" : "normal",
             }}
           >
             {quote ? `"${mainContent}"` : mainContent}
@@ -386,29 +453,30 @@ export const InfoCard = ({ data }) => {
             <Stack spacing={1.5}>
               {allFields?.map((field, index) => {
                 if (!field.key || !field.value) return null;
-                
+
                 const icon = getFieldIcon(field.key);
-                
+
                 return (
-                  <Box key={index} display="flex" alignItems="flex-start" gap={1}>
+                  <Box
+                    key={index}
+                    display="flex"
+                    alignItems="flex-start"
+                    gap={1}
+                  >
                     {icon && (
-                      <Box 
-                        sx={{ 
+                      <Box
+                        sx={{
                           mt: 0.25,
                           color: typeConfig.color,
-                          flexShrink: 0
+                          flexShrink: 0,
                         }}
                       >
                         {icon}
                       </Box>
                     )}
                     <Box flex={1}>
-                      <Typography 
-                        variant="subtitle1" 
-                      >
-                        {field.key}:
-                      </Typography>
-                      <Typography variant='subtitle1'>
+                      <Typography variant="subtitle1">{field.key}:</Typography>
+                      <Typography variant="subtitle1">
                         {renderFieldValue(field)}
                       </Typography>
                     </Box>
@@ -428,18 +496,18 @@ export const InfoCard = ({ data }) => {
             href={link}
             target="_blank"
             rel="noopener noreferrer"
-            sx={{ 
+            sx={{
               backgroundColor: typeConfig.buttonColor,
-              color: 'white',
+              color: "white",
               fontWeight: 600,
               py: 1,
-              fontSize: '0.875rem',
-              textTransform: 'none',
+              fontSize: "0.875rem",
+              textTransform: "none",
               borderRadius: 1,
-              '&:hover': {
+              "&:hover": {
                 backgroundColor: typeConfig.buttonColor,
-                filter: 'brightness(0.9)'
-              }
+                filter: "brightness(0.9)",
+              },
             }}
           >
             {typeConfig.buttonText}
@@ -452,18 +520,18 @@ export const InfoCard = ({ data }) => {
             <Divider sx={{ mb: 1.5 }} />
             <Box display="flex" flexWrap="wrap" gap={1}>
               {Object.entries(otherProps)?.map(([key, value]) => {
-                if (!value || typeof value === 'object') return null;
+                if (!value || typeof value === "object") return null;
                 return (
-                  <Chip 
+                  <Chip
                     key={key}
                     label={`${key}: ${value}`}
                     size="small"
                     variant="outlined"
-                    sx={{ 
-                      fontSize: '0.7rem',
+                    sx={{
+                      fontSize: "0.7rem",
                       height: 20,
                       borderColor: typeConfig.color,
-                      color: typeConfig.color
+                      color: typeConfig.color,
                     }}
                   />
                 );
