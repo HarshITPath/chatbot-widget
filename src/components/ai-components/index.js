@@ -1,6 +1,5 @@
 // Universal InfoCard component for all dynamic content types
-
-import { InfoCard } from './info-card';
+import InfoCard from "./index.jsx";
 
 const COMPONENT_REGISTRY = {
   info_card: InfoCard,
