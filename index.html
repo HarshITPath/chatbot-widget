@@ -669,8 +669,11 @@
 
         updateStatus('Loading widget script...', 'loading');
 
-        var script = document.createElement('script');
-        script.src = './dist/widget/chatbot-widget.umd.js';
+  var script = document.createElement('script');
+  // In production (Vercel) the build output `dist` is published as the site root.
+  // Load the widget bundle from the published path so we don't get an HTML 404 page
+  // returned for the JS file (which causes "Unexpected token '<'" errors).
+  script.src = '/widget/chatbot-widget.umd.js';
         script.async = true;
         
         script.onload = function () {
