@@ -27,7 +27,7 @@ export const AIResponseRenderer = memo(({ message, config = {} }) => {
   return (
     <Box sx={{ "& > *:first-of-type": { mt: 0 }, "& > *:last-child": { mb: 0 } }}>
       {parsedContent?.map((item) => (
-        <ContentRenderer key={item.id} {...{ item, config }} />
+        <ContentRenderer key={item.id} message={message} {...{ item, config }} />
       ))}
     </Box>
   );
