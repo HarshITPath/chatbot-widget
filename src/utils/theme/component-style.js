@@ -10,7 +10,7 @@ export const componentsStyle = (theme) => {
         root: {
           textTransform: "none",
           fontSize: "1rem",
-          fontFamily: "sans-serif",
+          fontFamily: '"Rubik", sans-serif',
         },
         outlined: {},
         sizeSmall: {

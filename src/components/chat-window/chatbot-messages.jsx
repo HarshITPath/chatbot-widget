@@ -37,6 +37,10 @@ const MessageItem = memo(({ msg, botAvatar, userAvatar, config }) => {
           color: msg.sender === USER_TYPE.USER ? "white" : "text.primary",
           border: msg.sender === USER_TYPE.BOT ? "1px solid" : "none",
           borderColor: msg.sender === USER_TYPE.BOT ? "grey.200" : "transparent",
+          wordWrap: 'break-word',
+          wordBreak: 'break-word',
+          overflowWrap: 'break-word',
+          overflow: 'hidden',
         }}
       >
         {msg.sender === USER_TYPE.BOT ? (

@@ -152,6 +152,7 @@ export const chatAPI = {
 
   // Generic send message function that handles session logic
   sendMessage: async (message, sessionId = null, useStreaming = false) => {
+    console.log("inside actual send message function")
     if (sessionId) {
       return chatAPI.continueChat(sessionId, message, useStreaming);
     } else {

@@ -94,7 +94,7 @@ export const useChatLogic = (initialMessages, config) => {
       shadow: config?.shadow || "0 8px 32px rgba(0,0,0,0.12)",
       zIndex: config?.zIndex || 1300,
       fontFamily:
-        config?.fontFamily || '"Roboto", "Helvetica", "Arial", sans-serif',
+        config?.fontFamily || '"Urbanist", "Rubik", system-ui, -apple-system, sans-serif',
     }),
     [config]
   );
@@ -102,6 +102,7 @@ export const useChatLogic = (initialMessages, config) => {
   // Optimized sendMessage with session management and streaming support
   const sendMessage = useCallback(
     async (useStreaming = true) => {
+      console.log("come to send message root")
       if (!input.trim() || loading) return;
 
       const userMessage = { sender: USER_TYPE.USER, text: input };
@@ -119,6 +120,7 @@ export const useChatLogic = (initialMessages, config) => {
 
       try {
         if (useStreaming) {
+          console.log("come to send message in stream condition")
           // Handle streaming response
           const response = await chatAPI.sendMessage(
             messageText,
@@ -257,6 +259,7 @@ export const useChatLogic = (initialMessages, config) => {
           // Final flush to ensure all content is displayed
           flushStream(updateBotMessage);
         } else {
+          console.log("come to send message in without stream")
           // Handle non-streaming JSON response
           const data = await chatAPI.sendMessage(messageText, sessionId, false);
 

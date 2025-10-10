@@ -7,8 +7,8 @@ import App from './App.jsx';
 // Default widget configuration
 const defaultConfig = {
   apiUrl: import.meta.env.VITE_API_URL || 'http://192.168.0.39:3000/api',
-  primaryColor: import.meta.env.VITE_PRIMARY_COLOR || '#1976d2',
-  secondaryColor: import.meta.env.VITE_SECONDARY_COLOR || '#dc004e',
+  primaryColor: import.meta.env.VITE_PRIMARY_COLOR || '#1A3B68',
+  secondaryColor: import.meta.env.VITE_SECONDARY_COLOR || '#9C814F',
   botName: import.meta.env.VITE_BOT_NAME || 'IT Path Assistant',
   botAvatar: import.meta.env.VITE_BOT_AVATAR || '🤖',
   userAvatar: import.meta.env.VITE_USER_AVATAR || '👤',
@@ -23,7 +23,7 @@ const defaultConfig = {
   buttonSize: parseInt(import.meta.env.VITE_BUTTON_SIZE) || 64,
   borderRadius: parseInt(import.meta.env.VITE_BORDER_RADIUS) || 3,
   shadow: import.meta.env.VITE_SHADOW || '0 8px 32px rgba(0,0,0,0.12)',
-  fontFamily: import.meta.env.VITE_FONT_FAMILY || '"Roboto", "Helvetica", "Arial", sans-serif'
+  fontFamily: import.meta.env.VITE_FONT_FAMILY || '"Urbanist", "Rubik", system-ui, -apple-system, sans-serif'
 };
 
 // Functional widget manager with module-level state

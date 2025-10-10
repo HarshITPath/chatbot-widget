@@ -1,4 +1,4 @@
-export const BASE_URL = "http://localhost:3000/api"
+export const BASE_URL = "http://192.168.0.90:3000/api"
 
 export const METHODS = {
     GET: 'get',
@@ -13,7 +13,7 @@ export const METHODS = {
 // Default configuration
 export const CONFIG = {
   useStreaming: true,
-  apiUrl: "http://localhost:3000/api",
+  apiUrl: "http://192.168.0.90:3000/api",
   botName: "IT Path Assistant",
   botAvatar: "🤖",
   userAvatar: "👤",

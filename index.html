@@ -5,29 +5,52 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AI-Powered Chatbot Widget — Test Suite</title>
-    <meta name="description" content="AI-Powered Chatbot Widget - Advanced Testing Suite & Integration Demo" />
-    <meta name="keywords" content="chatbot, AI, widget, customer support, automation, testing" />
+    <meta
+      name="description"
+      content="AI-Powered Chatbot Widget - Advanced Testing Suite & Integration Demo"
+    />
+    <meta
+      name="keywords"
+      content="chatbot, AI, widget, customer support, automation, testing"
+    />
     <meta name="author" content="AI Chatbot Widget" />
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:title" content="AI-Powered Chatbot Widget" />
-    <meta property="og:description" content="Advanced Testing Suite & Integration Demo for AI-powered chatbot widget" />
-    
+    <meta
+      property="og:description"
+      content="Advanced Testing Suite & Integration Demo for AI-powered chatbot widget"
+    />
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:title" content="AI-Powered Chatbot Widget" />
-    <meta property="twitter:description" content="Advanced Testing Suite & Integration Demo" />
-    
+    <meta
+      property="twitter:description"
+      content="Advanced Testing Suite & Integration Demo"
+    />
+
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🤖%3C/text%3E%3C/svg%3E"
+    />
+
+    <!-- Google Fonts - Only Urbanist and Rubik -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;400;500;600;700&family=Urbanist:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
     <style>
-      :root { 
-        color-scheme: light dark; 
-        --primary: #1976d2;
+      :root {
+        color-scheme: light dark;
+        --primary: #1A3B68;
         --primary-dark: #1565c0;
         --secondary: #dc004e;
         --success: #4caf50;
@@ -38,10 +61,14 @@
         --on-surface: #1a1a1a;
         --on-surface-variant: #666666;
         --border: #e0e0e0;
-        --shadow: rgba(0,0,0,0.1);
-        --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        --shadow: rgba(0, 0, 0, 0.1);
+        --gradient: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
       }
-      
+
       @media (prefers-color-scheme: dark) {
         :root {
           --surface: #121212;
@@ -49,17 +76,19 @@
           --on-surface: #ffffff;
           --on-surface-variant: #b0b0b0;
           --border: #333333;
-          --shadow: rgba(0,0,0,0.3);
+          --shadow: rgba(0, 0, 0, 0.3);
         }
       }
 
-      * { box-sizing: border-box; }
-      
-      body { 
-        font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif; 
-        margin: 0; 
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        /* font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;  */
+        margin: 0;
         padding: 20px;
-        line-height: 1.6; 
+        line-height: 1.6;
         background: var(--surface-variant);
         color: var(--on-surface);
         min-height: 100vh;
@@ -75,16 +104,16 @@
         box-shadow: 0 8px 32px var(--shadow);
       }
 
-      .header h1 { 
-        margin: 0 0 0.5rem; 
-        font-size: 2.5rem; 
+      .header h1 {
+        margin: 0 0 0.5rem;
+        font-size: 2.5rem;
         font-weight: 700;
-        text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
       }
 
-      .header .subtitle { 
-        font-size: 1.1rem; 
-        opacity: 0.9; 
+      .header .subtitle {
+        font-size: 1.1rem;
+        opacity: 0.9;
         font-weight: 300;
       }
 
@@ -138,8 +167,12 @@
         .main-container {
           grid-template-columns: 1fr;
         }
-        .header h1 { font-size: 2rem; }
-        body { padding: 1rem; }
+        .header h1 {
+          font-size: 2rem;
+        }
+        body {
+          padding: 1rem;
+        }
       }
 
       .panel {
@@ -171,53 +204,57 @@
         padding: 1.5rem;
       }
 
-      .config-grid { 
-        display: grid; 
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-        gap: 1rem; 
+      .config-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
         margin-bottom: 1.5rem;
       }
 
-      .field { 
-        display: flex; 
-        flex-direction: column; 
-        gap: 0.5rem; 
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
       }
 
-      .field label { 
-        font-size: 0.9rem; 
-        font-weight: 600; 
+      .field label {
+        font-size: 0.9rem;
+        font-weight: 600;
         color: var(--on-surface);
         display: flex;
         align-items: center;
         gap: 0.5rem;
       }
 
-      .field input, .field select, .field textarea { 
-        padding: 0.75rem; 
-        border-radius: 8px; 
-        border: 1px solid var(--border); 
-        background: var(--surface); 
+      .field input,
+      .field select,
+      .field textarea {
+        padding: 0.75rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface);
         color: var(--on-surface);
         font-family: inherit;
         transition: border-color 0.2s ease, box-shadow 0.2s ease;
       }
 
-      .field input:focus, .field select:focus, .field textarea:focus {
+      .field input:focus,
+      .field select:focus,
+      .field textarea:focus {
         outline: none;
         border-color: var(--primary);
         box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
       }
 
-      .field input[type="color"] { 
-        padding: 0.25rem; 
-        height: 42px; 
+      .field input[type="color"] {
+        padding: 0.25rem;
+        height: 42px;
         cursor: pointer;
       }
 
-      .field textarea { 
-        resize: vertical; 
-        min-height: 80px; 
+      .field textarea {
+        resize: vertical;
+        min-height: 80px;
         font-size: 0.9rem;
       }
 
@@ -225,19 +262,19 @@
         grid-column: 1/-1;
       }
 
-      .toolbar { 
-        display: flex; 
-        flex-wrap: wrap; 
-        gap: 0.75rem; 
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
         margin-bottom: 1rem;
       }
 
-      .btn { 
-        padding: 0.75rem 1.5rem; 
-        border-radius: 8px; 
-        border: 1px solid var(--border); 
-        background: var(--surface); 
-        cursor: pointer; 
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        cursor: pointer;
         font-weight: 600;
         font-family: inherit;
         transition: all 0.2s ease;
@@ -253,42 +290,42 @@
         box-shadow: 0 4px 12px var(--shadow);
       }
 
-      .btn.primary { 
-        background: var(--primary); 
-        color: white; 
-        border-color: var(--primary); 
+      .btn.primary {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
       }
 
       .btn.primary:hover {
         background: var(--primary-dark);
       }
 
-      .btn.success { 
-        background: var(--success); 
-        color: white; 
-        border-color: var(--success); 
+      .btn.success {
+        background: var(--success);
+        color: white;
+        border-color: var(--success);
       }
 
-      .btn.warning { 
-        background: var(--warning); 
-        color: white; 
-        border-color: var(--warning); 
+      .btn.warning {
+        background: var(--warning);
+        color: white;
+        border-color: var(--warning);
       }
 
-      .btn.error { 
-        background: var(--error); 
-        color: white; 
-        border-color: var(--error); 
+      .btn.error {
+        background: var(--error);
+        color: white;
+        border-color: var(--error);
       }
 
-      .btn.ghost { 
-        background: transparent; 
+      .btn.ghost {
+        background: transparent;
         border-color: var(--border);
       }
 
-      .btn:disabled { 
-        opacity: 0.6; 
-        cursor: not-allowed; 
+      .btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
         transform: none !important;
       }
 
@@ -320,20 +357,26 @@
       }
 
       @keyframes pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: 0.5; }
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
       }
 
-      #log { 
-        font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace; 
-        font-size: 0.85rem; 
-        white-space: pre-wrap; 
-        background: #0a0a0a; 
-        color: #00ff88; 
-        padding: 1rem; 
-        border-radius: 8px; 
-        height: 300px; 
-        overflow: auto; 
+      #log {
+        font-family: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas,
+          "Courier New", monospace;
+        font-size: 0.85rem;
+        white-space: pre-wrap;
+        background: #0a0a0a;
+        color: #00ff88;
+        padding: 1rem;
+        border-radius: 8px;
+        height: 300px;
+        overflow: auto;
         border: 1px solid #333;
         line-height: 1.4;
       }
@@ -500,14 +543,22 @@
           <div class="config-grid">
             <div class="field">
               <label for="apiUrl"><i class="fas fa-link"></i> API URL</label>
-              <input id="apiUrl" type="url" placeholder="http://192.168.0.39:3000/api" />
+              <input
+                id="apiUrl"
+                type="url"
+                placeholder="http://192.168.0.39:3000/api"
+              />
             </div>
             <div class="field">
-              <label for="primaryColor"><i class="fas fa-palette"></i> Primary Color</label>
-              <input id="primaryColor" type="color" value="#1976d2" />
+              <label for="primaryColor"
+                ><i class="fas fa-palette"></i> Primary Color</label
+              >
+              <input id="primaryColor" type="color" value="#1A3B68" />
             </div>
             <div class="field">
-              <label for="secondaryColor"><i class="fas fa-brush"></i> Secondary Color</label>
+              <label for="secondaryColor"
+                ><i class="fas fa-brush"></i> Secondary Color</label
+              >
               <input id="secondaryColor" type="color" value="#dc004e" />
             </div>
             <div class="field">
@@ -515,7 +566,9 @@
               <input id="botName" type="text" value="AI Assistant" />
             </div>
             <div class="field">
-              <label for="position"><i class="fas fa-arrows-alt"></i> Position</label>
+              <label for="position"
+                ><i class="fas fa-arrows-alt"></i> Position</label
+              >
               <select id="position">
                 <option value="bottom-right" selected>Bottom Right</option>
                 <option value="bottom-left">Bottom Left</option>
@@ -524,29 +577,55 @@
               </select>
             </div>
             <div class="field">
-              <label for="buttonSize"><i class="fas fa-expand-arrows-alt"></i> Button Size (px)</label>
-              <input id="buttonSize" type="range" min="40" max="96" value="64" oninput="updateSizeDisplay(this.value)" />
+              <label for="buttonSize"
+                ><i class="fas fa-expand-arrows-alt"></i> Button Size
+                (px)</label
+              >
+              <input
+                id="buttonSize"
+                type="range"
+                min="40"
+                max="96"
+                value="64"
+                oninput="updateSizeDisplay(this.value)"
+              />
               <span id="sizeDisplay">64px</span>
             </div>
             <div class="field">
-              <label for="zIndex"><i class="fas fa-layer-group"></i> Z-Index</label>
+              <label for="zIndex"
+                ><i class="fas fa-layer-group"></i> Z-Index</label
+              >
               <input id="zIndex" type="number" value="1300" />
             </div>
             <div class="field">
-              <label for="botAvatar"><i class="fas fa-user-robot"></i> Bot Avatar</label>
+              <label for="botAvatar"
+                ><i class="fas fa-user-robot"></i> Bot Avatar</label
+              >
               <input id="botAvatar" type="text" value="🤖" />
             </div>
             <div class="field">
-              <label for="userAvatar"><i class="fas fa-user"></i> User Avatar</label>
+              <label for="userAvatar"
+                ><i class="fas fa-user"></i> User Avatar</label
+              >
               <input id="userAvatar" type="text" value="👤" />
             </div>
             <div class="field full-width">
-              <label for="greeting"><i class="fas fa-comment-dots"></i> Welcome Message</label>
-              <textarea id="greeting">👋 Hi! I'm your AI-powered assistant. How can I help you today?</textarea>
+              <label for="greeting"
+                ><i class="fas fa-comment-dots"></i> Welcome Message</label
+              >
+              <textarea id="greeting">
+👋 Hi! I'm your AI-powered assistant. How can I help you today?</textarea
+              >
             </div>
             <div class="field full-width">
-              <label for="placeholder"><i class="fas fa-keyboard"></i> Input Placeholder</label>
-              <input id="placeholder" type="text" value="Type your message here..." />
+              <label for="placeholder"
+                ><i class="fas fa-keyboard"></i> Input Placeholder</label
+              >
+              <input
+                id="placeholder"
+                type="text"
+                value="Type your message here..."
+              />
             </div>
           </div>
 
@@ -613,9 +692,11 @@
               </button>
             </div>
           </div>
-          <pre id="log" aria-live="polite">🚀 Widget Testing Suite Initialized
+          <pre id="log" aria-live="polite">
+🚀 Widget Testing Suite Initialized
 ⏳ Loading chatbot widget script...
-</pre>
+</pre
+          >
         </div>
       </div>
     </div>
@@ -626,7 +707,9 @@
         <div class="feature-item">
           <div class="feature-icon"><i class="fas fa-brain"></i></div>
           <h4>AI-Powered</h4>
-          <p>Advanced natural language processing with contextual understanding</p>
+          <p>
+            Advanced natural language processing with contextual understanding
+          </p>
         </div>
         <div class="feature-item">
           <div class="feature-icon"><i class="fas fa-mobile-alt"></i></div>
@@ -659,96 +742,108 @@
     <!-- Load the built UMD bundle with enhanced error handling -->
     <script>
       (function () {
-        const statusEl = document.getElementById('status');
-        const statusIndicator = document.getElementById('statusIndicator');
-        
-        function updateStatus(message, type = 'loading') {
+        const statusEl = document.getElementById("status");
+        const statusIndicator = document.getElementById("statusIndicator");
+
+        function updateStatus(message, type = "loading") {
           statusEl.textContent = message;
           statusIndicator.className = `status-indicator ${type}`;
         }
 
-        updateStatus('Loading widget script...', 'loading');
+        updateStatus("Loading widget script...", "loading");
 
-  var script = document.createElement('script');
-  // In production (Vercel) the build output `dist` is published as the site root.
-  // Load the widget bundle from the published path so we don't get an HTML 404 page
-  // returned for the JS file (which causes "Unexpected token '<'" errors).
-  script.src = '/widget/chatbot-widget.umd.js';
+        var script = document.createElement("script");
+        // In production (Vercel) the build output `dist` is published as the site root.
+        // Load the widget bundle from the published path so we don't get an HTML 404 page
+        // returned for the JS file (which causes "Unexpected token '<'" errors).
+        script.src = "/dist/widget/chatbot-widget.umd.js";
         script.async = true;
-        
+
         script.onload = function () {
-          updateStatus('Widget script loaded successfully!', 'ready');
-          logLine('✅ Widget script loaded successfully');
-          
+          updateStatus("Widget script loaded successfully!", "ready");
+          logLine("✅ Widget script loaded successfully");
+
           // Enable controls
-          ['initBtn','updateBtn','showBtn','hideBtn','destroyBtn'].forEach(function(id){
-            var el = document.getElementById(id);
-            if (el) el.disabled = false;
-          });
+          ["initBtn", "updateBtn", "showBtn", "hideBtn", "destroyBtn"].forEach(
+            function (id) {
+              var el = document.getElementById(id);
+              if (el) el.disabled = false;
+            }
+          );
         };
-        
+
         script.onerror = function () {
-          updateStatus('Failed to load widget script', 'error');
-          logLine('❌ Failed to load ./dist/widget/chatbot-widget.umd.js');
+          updateStatus("Failed to load widget script", "error");
+          logLine("❌ Failed to load ./dist/widget/chatbot-widget.umd.js");
           logLine('💡 Make sure you ran "npm run build:widget" first');
           incrementErrorCount();
         };
-        
+
         document.body.appendChild(script);
       })();
     </script>
 
     <!-- Enhanced widget management with analytics -->
     <script>
-      const lsKey = 'chatbot-widget-test-config';
+      const lsKey = "chatbot-widget-test-config";
       let analytics = {
         initCount: 0,
         showCount: 0,
         configUpdates: 0,
-        errorCount: 0
+        errorCount: 0,
       };
 
       // Preset configurations
       const presets = {
         development: {
-          apiUrl: 'http://localhost:3000/api',
-          primaryColor: '#2196f3',
-          secondaryColor: '#ff4081',
-          botName: 'DevBot',
-          greeting: '🛠️ Development mode active. Ready for testing!',
-          placeholder: 'Enter your test message...'
+          apiUrl: "http://localhost:3000/api",
+          primaryColor: "#2196f3",
+          secondaryColor: "#ff4081",
+          botName: "DevBot",
+          greeting: "🛠️ Development mode active. Ready for testing!",
+          placeholder: "Enter your test message...",
         },
         production: {
-          apiUrl: 'https://api.yoursite.com/chat',
-          primaryColor: '#1976d2',
-          secondaryColor: '#dc004e',
-          botName: 'Assistant',
-          greeting: '👋 Welcome! How can I assist you today?',
-          placeholder: 'Type your message...'
+          apiUrl: "https://api.yoursite.com/chat",
+          primaryColor: "#1A3B68",
+          secondaryColor: "#dc004e",
+          botName: "Assistant",
+          greeting: "👋 Welcome! How can I assist you today?",
+          placeholder: "Type your message...",
         },
         demo: {
-          apiUrl: 'https://demo-api.example.com',
-          primaryColor: '#9c27b0',
-          secondaryColor: '#ff5722',
-          botName: 'Demo AI',
-          greeting: '🌟 This is a demo of our AI chatbot. Try asking me anything!',
-          placeholder: 'Ask me anything...'
-        }
+          apiUrl: "https://demo-api.example.com",
+          primaryColor: "#9c27b0",
+          secondaryColor: "#ff5722",
+          botName: "Demo AI",
+          greeting:
+            "🌟 This is a demo of our AI chatbot. Try asking me anything!",
+          placeholder: "Ask me anything...",
+        },
       };
 
-      function logLine(msg, type = 'info') {
-        const el = document.getElementById('log');
+      function logLine(msg, type = "info") {
+        const el = document.getElementById("log");
         const time = new Date().toLocaleTimeString();
-        const icon = type === 'error' ? '❌' : type === 'success' ? '✅' : type === 'warning' ? '⚠️' : 'ℹ️';
+        const icon =
+          type === "error"
+            ? "❌"
+            : type === "success"
+            ? "✅"
+            : type === "warning"
+            ? "⚠️"
+            : "ℹ️";
         el.textContent += `[${time}] ${icon} ${msg}\n`;
         el.scrollTop = el.scrollHeight;
       }
 
       function updateAnalytics() {
-        document.getElementById('initCount').textContent = analytics.initCount;
-        document.getElementById('showCount').textContent = analytics.showCount;
-        document.getElementById('configUpdates').textContent = analytics.configUpdates;
-        document.getElementById('errorCount').textContent = analytics.errorCount;
+        document.getElementById("initCount").textContent = analytics.initCount;
+        document.getElementById("showCount").textContent = analytics.showCount;
+        document.getElementById("configUpdates").textContent =
+          analytics.configUpdates;
+        document.getElementById("errorCount").textContent =
+          analytics.errorCount;
       }
 
       function incrementErrorCount() {
@@ -757,14 +852,14 @@
       }
 
       function updateSizeDisplay(value) {
-        document.getElementById('sizeDisplay').textContent = value + 'px';
+        document.getElementById("sizeDisplay").textContent = value + "px";
       }
 
       function loadPreset(presetName) {
         const config = presets[presetName];
         if (config) {
           writeConfigToForm(config);
-          logLine(`📋 Loaded ${presetName} preset configuration`, 'success');
+          logLine(`📋 Loaded ${presetName} preset configuration`, "success");
         }
       }
 
@@ -772,72 +867,81 @@
         const val = (id) => document.getElementById(id).value;
         const num = (id) => Number(document.getElementById(id).value);
         return {
-          apiUrl: val('apiUrl') || 'http://192.168.0.39:3000/api',
-          primaryColor: val('primaryColor') || '#1976d2',
-          secondaryColor: val('secondaryColor') || '#dc004e',
-          botName: val('botName') || 'AI Assistant',
-          botAvatar: val('botAvatar') || '🤖',
-          userAvatar: val('userAvatar') || '👤',
-          position: val('position') || 'bottom-right',
-          buttonSize: num('buttonSize') || 64,
-          zIndex: num('zIndex') || 1300,
-          greeting: val('greeting') || '👋 Hi! I\'m your AI-powered assistant. How can I help you today?',
-          placeholder: val('placeholder') || 'Type your message here...',
+          apiUrl: val("apiUrl") || "http://192.168.0.39:3000/api",
+          primaryColor: val("primaryColor") || "#1A3B68",
+          secondaryColor: val("secondaryColor") || "#dc004e",
+          botName: val("botName") || "AI Assistant",
+          botAvatar: val("botAvatar") || "🤖",
+          userAvatar: val("userAvatar") || "👤",
+          position: val("position") || "bottom-right",
+          buttonSize: num("buttonSize") || 64,
+          zIndex: num("zIndex") || 1300,
+          greeting:
+            val("greeting") ||
+            "👋 Hi! I'm your AI-powered assistant. How can I help you today?",
+          placeholder: val("placeholder") || "Type your message here...",
         };
       }
 
       function writeConfigToForm(cfg) {
-        const set = (id, v) => { 
-          const el = document.getElementById(id); 
-          if (el && v !== undefined) el.value = v; 
+        const set = (id, v) => {
+          const el = document.getElementById(id);
+          if (el && v !== undefined) el.value = v;
         };
-        set('apiUrl', cfg.apiUrl);
-        set('primaryColor', cfg.primaryColor);
-        set('secondaryColor', cfg.secondaryColor);
-        set('botName', cfg.botName);
-        set('botAvatar', cfg.botAvatar);
-        set('userAvatar', cfg.userAvatar);
-        set('position', cfg.position);
-        set('buttonSize', cfg.buttonSize);
-        set('zIndex', cfg.zIndex);
-        set('greeting', cfg.greeting);
-        set('placeholder', cfg.placeholder);
-        
+        set("apiUrl", cfg.apiUrl);
+        set("primaryColor", cfg.primaryColor);
+        set("secondaryColor", cfg.secondaryColor);
+        set("botName", cfg.botName);
+        set("botAvatar", cfg.botAvatar);
+        set("userAvatar", cfg.userAvatar);
+        set("position", cfg.position);
+        set("buttonSize", cfg.buttonSize);
+        set("zIndex", cfg.zIndex);
+        set("greeting", cfg.greeting);
+        set("placeholder", cfg.placeholder);
+
         // Update size display
         if (cfg.buttonSize) updateSizeDisplay(cfg.buttonSize);
       }
 
       function persist(cfg) {
-        try { 
-          localStorage.setItem(lsKey, JSON.stringify(cfg)); 
-          localStorage.setItem(lsKey + '-analytics', JSON.stringify(analytics));
+        try {
+          localStorage.setItem(lsKey, JSON.stringify(cfg));
+          localStorage.setItem(lsKey + "-analytics", JSON.stringify(analytics));
         } catch (e) {
-          logLine('Failed to save configuration to localStorage', 'error');
+          logLine("Failed to save configuration to localStorage", "error");
         }
       }
 
       function restore() {
-        try { 
+        try {
           const config = localStorage.getItem(lsKey);
-          const analyticsData = localStorage.getItem(lsKey + '-analytics');
-          
+          const analyticsData = localStorage.getItem(lsKey + "-analytics");
+
           if (analyticsData) {
             analytics = { ...analytics, ...JSON.parse(analyticsData) };
             updateAnalytics();
           }
-          
+
           if (config) return JSON.parse(config);
         } catch (e) {
-          logLine('Failed to restore configuration from localStorage', 'warning');
+          logLine(
+            "Failed to restore configuration from localStorage",
+            "warning"
+          );
         }
         return null;
       }
 
       function initWidget() {
-        const statusEl = document.getElementById('status');
-        if (!window.ChatbotWidget || typeof window.ChatbotWidget.init !== 'function') {
-          statusEl.textContent = 'ChatbotWidget not available. Please refresh the page.';
-          logLine('ChatbotWidget global object not found', 'error');
+        const statusEl = document.getElementById("status");
+        if (
+          !window.ChatbotWidget ||
+          typeof window.ChatbotWidget.init !== "function"
+        ) {
+          statusEl.textContent =
+            "ChatbotWidget not available. Please refresh the page.";
+          logLine("ChatbotWidget global object not found", "error");
           incrementErrorCount();
           return;
         }
@@ -847,16 +951,16 @@
 
         try {
           window.ChatbotWidget.init(cfg);
-          statusEl.textContent = '✅ Widget initialized successfully!';
-          logLine('🚀 Widget initialized with configuration:', 'success');
+          statusEl.textContent = "✅ Widget initialized successfully!";
+          logLine("🚀 Widget initialized with configuration:", "success");
           logLine(JSON.stringify(cfg, null, 2));
           analytics.initCount++;
           updateAnalytics();
         } catch (e) {
           console.error(e);
           const errorMsg = e && e.message ? e.message : String(e);
-          statusEl.textContent = '❌ Initialization error: ' + errorMsg;
-          logLine('Initialization failed: ' + errorMsg, 'error');
+          statusEl.textContent = "❌ Initialization error: " + errorMsg;
+          logLine("Initialization failed: " + errorMsg, "error");
           incrementErrorCount();
         }
       }
@@ -864,95 +968,108 @@
       function updateConfig() {
         const cfg = readConfigFromForm();
         persist(cfg);
-        
+
         if (window.ChatbotWidget?.updateConfig) {
           try {
             window.ChatbotWidget.updateConfig(cfg);
-            logLine('🔄 Configuration updated successfully', 'success');
+            logLine("🔄 Configuration updated successfully", "success");
             analytics.configUpdates++;
             updateAnalytics();
           } catch (e) {
-            logLine('Failed to update configuration: ' + (e.message || e), 'error');
+            logLine(
+              "Failed to update configuration: " + (e.message || e),
+              "error"
+            );
             incrementErrorCount();
           }
         } else {
-          logLine('Update function not available. Initialize widget first.', 'warning');
+          logLine(
+            "Update function not available. Initialize widget first.",
+            "warning"
+          );
         }
       }
 
-      function showWidget() { 
+      function showWidget() {
         try {
-          window.ChatbotWidget?.show?.(); 
-          logLine('👁️ Widget shown', 'success');
+          window.ChatbotWidget?.show?.();
+          logLine("👁️ Widget shown", "success");
           analytics.showCount++;
           updateAnalytics();
         } catch (e) {
-          logLine('Failed to show widget: ' + (e.message || e), 'error');
+          logLine("Failed to show widget: " + (e.message || e), "error");
           incrementErrorCount();
         }
       }
 
-      function hideWidget() { 
+      function hideWidget() {
         try {
-          window.ChatbotWidget?.hide?.(); 
-          logLine('🙈 Widget hidden', 'success');
+          window.ChatbotWidget?.hide?.();
+          logLine("🙈 Widget hidden", "success");
         } catch (e) {
-          logLine('Failed to hide widget: ' + (e.message || e), 'error');
+          logLine("Failed to hide widget: " + (e.message || e), "error");
           incrementErrorCount();
         }
       }
 
-      function destroyWidget() { 
+      function destroyWidget() {
         try {
-          window.ChatbotWidget?.destroy?.(); 
-          logLine('💥 Widget destroyed', 'success');
+          window.ChatbotWidget?.destroy?.();
+          logLine("💥 Widget destroyed", "success");
         } catch (e) {
-          logLine('Failed to destroy widget: ' + (e.message || e), 'error');
+          logLine("Failed to destroy widget: " + (e.message || e), "error");
           incrementErrorCount();
         }
       }
 
       function clearLog() {
-        document.getElementById('log').textContent = '🧹 Log cleared\n';
+        document.getElementById("log").textContent = "🧹 Log cleared\n";
       }
 
       function exportLog() {
-        const logContent = document.getElementById('log').textContent;
-        const blob = new Blob([logContent], { type: 'text/plain' });
+        const logContent = document.getElementById("log").textContent;
+        const blob = new Blob([logContent], { type: "text/plain" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
-        a.download = `chatbot-widget-log-${new Date().toISOString().slice(0,19).replace(/[:.]/g, '-')}.txt`;
+        a.download = `chatbot-widget-log-${new Date()
+          .toISOString()
+          .slice(0, 19)
+          .replace(/[:.]/g, "-")}.txt`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
-        logLine('📁 Log exported successfully', 'success');
+        logLine("📁 Log exported successfully", "success");
       }
 
       // Event listeners
-      document.getElementById('initBtn').addEventListener('click', initWidget);
-      document.getElementById('updateBtn').addEventListener('click', updateConfig);
-      document.getElementById('showBtn').addEventListener('click', showWidget);
-      document.getElementById('hideBtn').addEventListener('click', hideWidget);
-      document.getElementById('destroyBtn').addEventListener('click', destroyWidget);
-      document.getElementById('clearLog').addEventListener('click', clearLog);
-      document.getElementById('exportLog').addEventListener('click', exportLog);
-      
+      document.getElementById("initBtn").addEventListener("click", initWidget);
+      document
+        .getElementById("updateBtn")
+        .addEventListener("click", updateConfig);
+      document.getElementById("showBtn").addEventListener("click", showWidget);
+      document.getElementById("hideBtn").addEventListener("click", hideWidget);
+      document
+        .getElementById("destroyBtn")
+        .addEventListener("click", destroyWidget);
+      document.getElementById("clearLog").addEventListener("click", clearLog);
+      document.getElementById("exportLog").addEventListener("click", exportLog);
+
       // Auto-save configuration on change
-      document.querySelectorAll('input, select, textarea').forEach(el => {
-        el.addEventListener('change', () => {
+      document.querySelectorAll("input, select, textarea").forEach((el) => {
+        el.addEventListener("change", () => {
           const cfg = readConfigFromForm();
           persist(cfg);
         });
       });
 
       // Initialize
-      document.addEventListener('DOMContentLoaded', () => {
+      document.addEventListener("DOMContentLoaded", () => {
         const restored = restore();
         if (restored) {
           writeConfigToForm(restored);
-          logLine('⚡ Previous configuration restored', 'success');
+          logLine("⚡ Previous configuration restored", "success");
         }
         updateAnalytics();
       });

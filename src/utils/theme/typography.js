@@ -2,7 +2,14 @@
 export const typography = (theme) => {
   return {
     fontFamily: [
-      "sans-serif",
+      '"Urbanist"',
+      '"Rubik"',
+      'system-ui',
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Arial',
+      'sans-serif',
     ].join(","),
 
     allVariants: {
@@ -10,8 +17,8 @@ export const typography = (theme) => {
     },
 
     h1: {
-      fontFamily: "sans-serif",
-      fontWeight: 400,
+      fontFamily: '"Rubik", "Urbanist", sans-serif',
+      fontWeight: 600,
       [theme.breakpoints.up("xs")]: {
         fontSize: "1.75rem",
       },
@@ -24,8 +31,8 @@ export const typography = (theme) => {
     },
 
     h2: {
-      fontFamily: "sans-serif",
-      fontWeight: 400,
+      fontFamily: '"Rubik", "Urbanist", sans-serif',
+      fontWeight: 600,
       [theme.breakpoints.up("xs")]: {
         fontSize: "1.75rem",
       },
@@ -55,7 +62,7 @@ export const typography = (theme) => {
     h6: {},
 
     body1: {
-      fontFamily: "sans-serif",
+      fontFamily: '"Urbanist", "Rubik", sans-serif',
       fontWeight: 400,
       [theme.breakpoints.up("xs")]: {
         fontSize: "1.125rem",
@@ -69,7 +76,7 @@ export const typography = (theme) => {
     },
 
     body2: {
-      fontFamily: "sans-serif",
+      fontFamily: '"Urbanist", "Rubik", sans-serif',
       fontWeight: 400,
       [theme.breakpoints.up("xs")]: {
         fontSize: "1rem",
@@ -83,8 +90,8 @@ export const typography = (theme) => {
     },
 
     subtitle1: {
-      fontFamily: "sans-serif",
-      fontWeight: 400,
+      fontFamily: '"Urbanist", "Rubik", sans-serif',
+      fontWeight: 500,
       [theme.breakpoints.up("xs")]: {
         fontSize: "0.875rem",
       },
