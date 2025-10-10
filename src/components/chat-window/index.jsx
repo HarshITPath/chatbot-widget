@@ -1,4 +1,4 @@
-import { memo } from "react";
+import { memo, useState } from "react";
 import {
   Box,
   Paper,
@@ -20,6 +20,8 @@ const ChatWindow = memo(function ChatWindow({
   messages: initialMessages,
   config,
 }) {
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  
   const {
     messages,
     input,
@@ -35,19 +37,33 @@ const ChatWindow = memo(function ChatWindow({
     clearSession,
   } = useChatLogic(initialMessages, config, onClose);
 
+  const toggleFullscreen = () => {
+    setIsFullscreen(!isFullscreen);
+  };
+
   return (
     <Paper
       elevation={8}
       sx={{
         position: "fixed",
-        bottom: 20,
-        right: 20,
-        left: { xs: 10, sm: "auto" },
-        width: configValues.windowSize.width,
-        height: configValues.windowSize.height,
+        ...(isFullscreen ? {
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: "100vw",
+          height: "100vh",
+          borderRadius: 0,
+        } : {
+          bottom: 20,
+          right: 20,
+          left: { xs: 10, sm: "auto" },
+          width: configValues.windowSize.width,
+          height: configValues.windowSize.height,
+          borderRadius: configValues.borderRadius,
+        }),
         display: "flex",
         flexDirection: "column",
-        borderRadius: configValues.borderRadius,
         overflow: "hidden",
         zIndex: configValues.zIndex,
         boxShadow: configValues.shadow,
@@ -109,6 +125,19 @@ const ChatWindow = memo(function ChatWindow({
                 <ICONS.REFRESH fontSize="small" />
               </IconButton>
             )}
+            <IconButton
+              size="small"
+              color="inherit"
+              onClick={toggleFullscreen}
+              title={isFullscreen ? "Exit Fullscreen" : "View Fullscreen"}
+              sx={{ "&:hover": { bgcolor: "rgba(255,255,255,0.1)" } }}
+            >
+              {isFullscreen ? (
+                <ICONS.FULLSCREEN_EXIT fontSize="small" />
+              ) : (
+                <ICONS.FULLSCREEN fontSize="small" />
+              )}
+            </IconButton>
             <IconButton
               size="small"
               color="inherit"

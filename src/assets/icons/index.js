@@ -17,6 +17,8 @@ import AssessmentIcon from '@mui/icons-material/Assessment';
 import FormatQuoteIcon from '@mui/icons-material/FormatQuote';
 import BuildCircleIcon from '@mui/icons-material/BuildCircle';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
+import FullscreenIcon from '@mui/icons-material/Fullscreen';
+import FullscreenExitIcon from '@mui/icons-material/FullscreenExit';
 
 export const ICONS = {
     CLOSE: CloseIcon,
@@ -37,5 +39,7 @@ export const ICONS = {
     CASE_STUDY:AssessmentIcon,
     TESTIMONIAL:FormatQuoteIcon,
     BUILD:BuildCircleIcon,
-    PORTFOLIO:FolderOpenIcon    
+    PORTFOLIO:FolderOpenIcon,
+    FULLSCREEN:FullscreenIcon,
+    FULLSCREEN_EXIT:FullscreenExitIcon    
 }
