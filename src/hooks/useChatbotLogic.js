@@ -13,6 +13,8 @@ export const useChatLogic = (initialMessages, config) => {
   const [loading, setLoading] = useState(false);
   const [hasFirstChunk, setHasFirstChunk] = useState(false);
   const [sessionId, setSessionId] = useState(null);
+  const [isInputDisabled, setIsInputDisabled] = useState(false);
+  const [showQuickReplies, setShowQuickReplies] = useState(true);
   const messagesEndRef = useRef(null);
   const sessionLoadedRef = useRef(false);
   const loadingSessionRef = useRef(false);
@@ -42,6 +44,11 @@ export const useChatLogic = (initialMessages, config) => {
           messageIndex: msg.messageIndex,
         }));
         setMessages(transformedMessages);
+
+        // If session has messages, hide quick replies
+        if (transformedMessages.length > 0) {
+          setShowQuickReplies(false);
+        }
 
         // Save session info to history
         sessionManager.saveSessionToHistory(sessionId, {
@@ -110,6 +117,9 @@ export const useChatLogic = (initialMessages, config) => {
 
       // Clear input immediately for better UX
       setInput("");
+
+      // Hide quick replies when user sends a message
+      setShowQuickReplies(false);
 
       // Add user message
       setMessages((prev) => [...prev, userMessage]);
@@ -315,9 +325,236 @@ export const useChatLogic = (initialMessages, config) => {
     sessionManager.clearSession();
     setSessionId(null);
     setMessages([]);
-    sessionLoadedRef.current = false; // Reset loading flags
+    setIsInputDisabled(false);
+    setShowQuickReplies(true); // Show quick replies again when clearing session
+    sessionLoadedRef.current = false;
     loadingSessionRef.current = false;
   }, []);
+
+  // Handler for quick reply button clicks
+  const handleQuickReply = useCallback(async (reply) => {
+    // Add user message
+    const userMessage = { 
+      sender: USER_TYPE.USER, 
+      text: reply.label,
+      timestamp: new Date().toISOString()
+    };
+
+    setMessages((prev) => [...prev, userMessage]);
+
+    // Hide quick replies after clicking
+    setShowQuickReplies(false);
+
+    // Check if this quick reply should use static response or API
+    if (reply.useStaticResponse) {
+      // Use predefined response (for job application)
+      const botMessage = {
+        sender: USER_TYPE.BOT,
+        text: reply.response,
+        timestamp: new Date().toISOString(),
+        isQuickReply: true,
+      };
+
+      setMessages((prev) => [...prev, botMessage]);
+
+      // Disable input if this quick reply requires it (job application)
+      if (reply.disableInput) {
+        setIsInputDisabled(true);
+      }
+    } else {
+      // Send to API and get response
+      setLoading(true);
+      setHasFirstChunk(false);
+      resetStream();
+
+      try {
+        if (configValues.useStreaming) {
+          // Handle streaming response
+          const response = await chatAPI.sendMessage(
+            reply.label,
+            sessionId,
+            true
+          );
+
+          if (!response.body) throw new Error("No response body");
+
+          const reader = response.body.getReader();
+          const decoder = new TextDecoder();
+          let botMessageAdded = false;
+          let sessionData = {};
+
+          // Optimized update function using streaming hook
+          const updateBotMessage = (text) => {
+            setMessages((prev) => {
+              const updated = [...prev];
+              const lastIndex = updated.length - 1;
+              if (updated[lastIndex]?.sender === USER_TYPE.BOT) {
+                updated[lastIndex] = {
+                  ...updated[lastIndex],
+                  text: text,
+                };
+              }
+              return updated;
+            });
+          };
+
+          while (true) {
+            const { done, value } = await reader.read();
+            if (done) break;
+
+            const chunk = decoder.decode(value, { stream: true });
+            const lines = chunk
+              .split("\n")
+              .filter((line) => line.trim().startsWith("data:"));
+
+            for (const line of lines) {
+              try {
+                const json = JSON.parse(line.replace(/^data:\s*/, ""));
+
+                // Handle session creation/metadata
+                if (json.sessionId) {
+                  if (!sessionId) {
+                    console.log(
+                      "Setting session ID from streaming:",
+                      json.sessionId
+                    );
+                    setSessionId(json.sessionId);
+                  }
+                  sessionData.sessionId = json.sessionId;
+                }
+
+                // Handle session creation type
+                if (json.type === "session_created" && json.sessionId) {
+                  if (!sessionId) {
+                    console.log(
+                      "Session created via streaming:",
+                      json.sessionId
+                    );
+                    setSessionId(json.sessionId);
+                  }
+                  sessionData.sessionId = json.sessionId;
+                }
+
+                if (json.messageCount) {
+                  sessionData.messageCount = json.messageCount;
+                }
+                if (json.tokenUsage) {
+                  sessionData.tokenUsage = json.tokenUsage;
+                }
+
+                if (json.chunk) {
+                  // First chunk - add bot message placeholder
+                  if (!botMessageAdded) {
+                    setMessages((prev) => [
+                      ...prev,
+                      {
+                        sender: USER_TYPE.BOT,
+                        text: "",
+                        sessionId: sessionData.sessionId,
+                        messageCount: sessionData.messageCount,
+                        timestamp: new Date().toISOString(),
+                      },
+                    ]);
+                    botMessageAdded = true;
+                    setHasFirstChunk(true);
+                  }
+
+                  // Use optimized streaming with batching
+                  addToStream(json.chunk, updateBotMessage, {
+                    batchSize: 5,
+                    updateInterval: 30,
+                  });
+                }
+
+                // Handle completion
+                if (json.done === true) {
+                  // Final session update
+                  if (sessionData.sessionId || json.sessionId) {
+                    const finalSessionId =
+                      sessionData.sessionId || json.sessionId;
+                    const finalMessageCount =
+                      sessionData.messageCount || json.messageCount;
+
+                    console.log(
+                      "Streaming completed. Final session:",
+                      finalSessionId,
+                      "Message count:",
+                      finalMessageCount
+                    );
+
+                    // Update session history with final data
+                    sessionManager.saveSessionToHistory(finalSessionId, {
+                      messageCount: finalMessageCount,
+                      lastMessage:
+                        json.finalResponse || "Streaming response completed",
+                      lastTimestamp: new Date().toISOString(),
+                      tokenUsage: sessionData.tokenUsage || json.tokenUsage,
+                    });
+
+                    // Ensure session ID is set if not already
+                    if (!sessionId && finalSessionId) {
+                      console.log("Setting final session ID:", finalSessionId);
+                      setSessionId(finalSessionId);
+                    }
+                  }
+                }
+              } catch (e) {
+                console.error("Failed to parse chunk:", line, e);
+              }
+            }
+          }
+
+          // Final flush to ensure all content is displayed
+          flushStream(updateBotMessage);
+        } else {
+          // Handle non-streaming JSON response
+          const data = await chatAPI.sendMessage(reply.label, sessionId, false);
+
+          // Set session ID if this was the first message
+          if (!sessionId && data.sessionId) {
+            setSessionId(data.sessionId);
+          }
+
+          // Add bot response to messages
+          if (data.response) {
+            const botMessage = {
+              sender: USER_TYPE.BOT,
+              text: data.response,
+              sessionId: data.sessionId,
+              messageCount: data.messageCount,
+              timestamp: new Date().toISOString(),
+              tokenUsage: data.tokenUsage,
+              cacheHit: data.cacheHit,
+            };
+
+            setMessages((prev) => [...prev, botMessage]);
+
+            // Update session history
+            if (data.sessionId) {
+              sessionManager.saveSessionToHistory(data.sessionId, {
+                messageCount: data.messageCount,
+                lastMessage: data.response,
+                lastTimestamp: botMessage.timestamp,
+                tokenUsage: data.tokenUsage,
+              });
+            }
+          }
+        }
+      } catch (error) {
+        setMessages((prev) => [
+          ...prev,
+          {
+            sender: USER_TYPE.BOT,
+            text: "⚠️ Something went wrong. Please try again.",
+          },
+        ]);
+        console.error("Quick reply error:", error);
+      } finally {
+        setLoading(false);
+        resetStream();
+      }
+    }
+  }, [sessionId, resetStream, addToStream, flushStream, configValues.useStreaming]);
 
   // Memoized input handlers
   const handleInputChange = useCallback((e) => {
@@ -377,11 +614,14 @@ export const useChatLogic = (initialMessages, config) => {
     messageKeys,
     configValues,
     sessionId,
+    isInputDisabled,
+    showQuickReplies,
     handleInputChange,
     handleKeyDown,
     handleSendClick,
     sendMessage,
     clearSession,
     loadSessionMessages,
+    handleQuickReply,
   };
 };

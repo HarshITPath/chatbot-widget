@@ -14,6 +14,7 @@ import { ICONS } from "../../assets/icons";
 import { useChatLogic } from "../../hooks/useChatbotLogic";
 import MessageItem from "./chatbot-messages";
 import LoadingIndicator from "./chatbot-loading";
+import QuickReplyButtons from "../quick-reply";
 
 const ChatWindow = memo(function ChatWindow({
   onClose,
@@ -31,10 +32,13 @@ const ChatWindow = memo(function ChatWindow({
     messageKeys,
     configValues,
     sessionId,
+    isInputDisabled,
+    showQuickReplies,
     handleInputChange,
     handleKeyDown,
     handleSendClick,
     clearSession,
+    handleQuickReply,
   } = useChatLogic(initialMessages, config, onClose);
 
   const toggleFullscreen = () => {
@@ -173,6 +177,11 @@ const ChatWindow = memo(function ChatWindow({
             />
           ))}
 
+          {/* Show quick reply buttons when showQuickReplies is true */}
+          {showQuickReplies && (
+            <QuickReplyButtons onQuickReply={handleQuickReply} />
+          )}
+
           {/* Loading fallback UI */}
           {loading && !hasFirstChunk && (
             <LoadingIndicator botAvatar={configValues.botAvatar} />
@@ -183,48 +192,62 @@ const ChatWindow = memo(function ChatWindow({
 
       <Divider />
 
-      {/* Input */}
-      <Box
-        sx={{
-          display: "flex",
-          p: 2,
-          alignItems: "flex-end",
-          gap: 1.5,
-        }}
-      >
-        <TextareaAutosize
-          minRows={1}
-          maxRows={4}
-          placeholder={configValues.placeholder}
-          value={input}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          style={{
-            flex: 1,
-            borderRadius: "20px",
-            padding: "12px 16px",
-            border: "2px solid #e0e0e0",
-            resize: "none",
-            outline: "none",
-            fontSize: "14px",
-            fontFamily: configValues.fontFamily,
-          }}
-        />
-        <IconButton
-          onClick={handleSendClick}
-          disabled={!input.trim() || loading}
+      {/* Input - conditionally hidden/disabled */}
+      {!isInputDisabled ? (
+        <Box
           sx={{
-            bgcolor: "primary.main",
-            color: "white",
-            width: 44,
-            height: 44,
-            "&:hover": { bgcolor: "primary.dark", transform: "scale(1.05)" },
-            "&:disabled": { bgcolor: "grey.300", color: "grey.500" },
+            display: "flex",
+            p: 2,
+            alignItems: "flex-end",
+            gap: 1.5,
           }}
         >
-          <ICONS.SEND fontSize="small" />
-        </IconButton>
-      </Box>
+          <TextareaAutosize
+            minRows={1}
+            maxRows={4}
+            placeholder={configValues.placeholder}
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={handleKeyDown}
+            style={{
+              flex: 1,
+              borderRadius: "20px",
+              padding: "12px 16px",
+              border: "2px solid #e0e0e0",
+              resize: "none",
+              outline: "none",
+              fontSize: "14px",
+              fontFamily: configValues.fontFamily,
+            }}
+          />
+          <IconButton
+            onClick={handleSendClick}
+            disabled={!input.trim() || loading}
+            sx={{
+              bgcolor: "primary.main",
+              color: "white",
+              width: 44,
+              height: 44,
+              "&:hover": { bgcolor: "primary.dark", transform: "scale(1.05)" },
+              "&:disabled": { bgcolor: "grey.300", color: "grey.500" },
+            }}
+          >
+            <ICONS.SEND fontSize="small" />
+          </IconButton>
+        </Box>
+      ) : (
+        <Box
+          sx={{
+            p: 2,
+            bgcolor: "grey.100",
+            textAlign: "center",
+          }}
+        >
+          <Typography variant="body2" color="text.secondary">
+            Thank you for your interest! Please send your resume to the email address provided.
+          </Typography>
+        </Box>
+      )}
     </Paper>
   );
 });

@@ -32,3 +32,44 @@ export const USER_TYPE = {
   BOT: "bot",
   USER:"user"
 }
+
+export const QUICK_REPLIES = [
+  {
+    id: 1,
+    icon: "💼",
+    label: "I want to apply for a job",
+    response: "Kindly share your updated resume at career@itpathsolutions.com.",
+    disableInput: true, // Special flag to disable input after this response
+    useStaticResponse: true, // Flag to use predefined response instead of API
+  },
+  {
+    id: 2,
+    icon: "🛠️",
+    label: "What services do you offer?",
+    useStaticResponse: false, // Send to API
+  },
+  {
+    id: 3,
+    icon: "📱",
+    label: "Can you build a mobile app for my business?",
+    useStaticResponse: false, // Send to API
+  },
+  // {
+  //   id: 4,
+  //   icon: "📍",
+  //   label: "Where is your company located?",
+  //   useStaticResponse: false, // Send to API
+  // },
+  // {
+  //   id: 5,
+  //   icon: "👨‍�",
+  //   label: "Want to hire dedicated developer",
+  //   useStaticResponse: false, // Send to API
+  // },
+  {
+    id: 6,
+    icon: "🌐",
+    label: "Want to know about IT Path Solutions",
+    useStaticResponse: false, // Send to API
+  },
+];

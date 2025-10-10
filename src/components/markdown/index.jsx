@@ -19,6 +19,8 @@ const MarkDownResponse = ({ id, content }) => {
                 wordBreak: "break-word",
                 overflowWrap: "break-word",
                 whiteSpace: "normal",
+                color:"text.primay",
+                fontWeight:500
               }}
             >
               {children}
@@ -48,7 +50,7 @@ const MarkDownResponse = ({ id, content }) => {
             <Typography
               variant="subtitle1"
               sx={{
-                fontWeight: 600,
+                // fontWeight: 600,
                 color: "primary.main",
               }}
             >
@@ -122,33 +124,30 @@ const MarkDownResponse = ({ id, content }) => {
           ),
           a: ({ href, children }) => (
             <Box
-  component="a"
-  href={href}
-  target="_blank"
-  rel="noopener noreferrer"
-  sx={{
-    display: "inline-flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 1,
-    cursor: "pointer",
-    fontWeight: 600,
-    fontSize: "14px",
-    color: "primary.main",
-    textDecoration: "none",
-    wordBreak: "break-word",
-    transition: "transform 0.3s ease, color 0.3s ease",
-
-    "&:hover": {
-      transform: "scale(1.08)", // ✅ zoom/scale effect
-      // color: "primary.main",
-      textDecoration: "underline", 
-    },
-  }}
->
-  {children}
-</Box>
-
+              component="a"
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1,
+                cursor: "pointer",
+                fontWeight: 600,
+                fontSize: "14px",
+                color: "primary.main",
+                textDecoration: "none",
+                wordBreak: "break-word",
+                transition: "transform 0.3s ease, 0.3s ease",
+                "&:hover": {
+                  transform: "scale(1.01)",
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              {children}
+            </Box>
           ),
           button: ({ children, ...props }) => (
             <Box
