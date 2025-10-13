@@ -212,7 +212,7 @@ const ChatWindow = memo(function ChatWindow({
               display: "flex",
               alignItems: "center",
               gap: 1,
-              bgcolor: "#f5f5f5",
+              bgcolor: "transparent",
               borderRadius: "28px",
               padding: "6px 8px 6px 16px",
             }}
