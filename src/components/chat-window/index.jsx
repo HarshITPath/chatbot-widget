@@ -98,6 +98,7 @@ const ChatWindow = memo(function ChatWindow({
                 bgcolor: "white",
                 width: 32,
                 height: 32,
+                borderRadius:"20%"
               }}
             />
             <Box>
