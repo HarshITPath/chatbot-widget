@@ -11,7 +11,7 @@ const QuickReplyButtons = memo(function QuickReplyButtons({ onQuickReply }) {
         gap: 1.5,
         p: 2,
         pl:"36px",
-        bgcolor: "#E5E4E2",
+        bgcolor: "#ffffff ",
       }}
     >
       <Typography

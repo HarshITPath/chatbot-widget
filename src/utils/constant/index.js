@@ -38,9 +38,7 @@ export const QUICK_REPLIES = [
     id: 1,
     icon: "💼",
     label: "I want to apply for a job",
-    response: "Kindly share your updated resume at career@itpathsolutions.com.",
-    disableInput: true, // Special flag to disable input after this response
-    useStaticResponse: true, // Flag to use predefined response instead of API
+    isJobApplication: true, // Flag to indicate this is a job application
   },
   {
     id: 2,

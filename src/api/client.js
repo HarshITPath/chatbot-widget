@@ -102,10 +102,13 @@ async function apiFetch(endpoint, options = {}, stream = false) {
 // Chat API functions
 export const chatAPI = {
   // Start a new chat session
-  startChat: async (initialMessage, useStreaming = false) => {
+  startChat: async (initialMessage, useStreaming = false, isJobApplication = false) => {
     const requestBody = { initialMessage };
     if (useStreaming) {
       requestBody.useStreaming = true;
+    }
+    if (isJobApplication) {
+      requestBody.isJobApplication = true;
     }
 
     if (useStreaming) {
@@ -151,12 +154,12 @@ export const chatAPI = {
   },
 
   // Generic send message function that handles session logic
-  sendMessage: async (message, sessionId = null, useStreaming = false) => {
+  sendMessage: async (message, sessionId = null, useStreaming = false, isJobApplication = false) => {
     console.log("inside actual send message function")
     if (sessionId) {
       return chatAPI.continueChat(sessionId, message, useStreaming);
     } else {
-      return chatAPI.startChat(message, useStreaming);
+      return chatAPI.startChat(message, useStreaming, isJobApplication);
     }
   }
 };

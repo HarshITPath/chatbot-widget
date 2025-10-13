@@ -1,18 +1,17 @@
 import { memo } from "react";
 import { Avatar, Box, Typography } from "@mui/material";
 
-const LoadingIndicator = memo(({ botAvatar }) => (
+const LoadingIndicator = memo(({ botAvatar, botLogo }) => (
   <Box sx={{ display: "flex", alignItems: "center", gap: 1, mt: 1, mb: 2 }}>
     <Avatar
+      src={botLogo}
+      alt="Bot Logo"
       sx={{
         width: 28,
         height: 28,
-        bgcolor: "primary.main",
-        fontSize: "0.8rem",
+        bgcolor: "white",
       }}
-    >
-      {botAvatar}
-    </Avatar>
+    />
     <Box
       sx={{
         bgcolor: "background.paper",

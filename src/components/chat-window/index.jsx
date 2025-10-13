@@ -15,6 +15,8 @@ import { useChatLogic } from "../../hooks/useChatbotLogic";
 import MessageItem from "./chatbot-messages";
 import LoadingIndicator from "./chatbot-loading";
 import QuickReplyButtons from "../quick-reply";
+import logo from "../../assets/logo.png";
+import userAvatar from "../../assets/user.png";
 
 const ChatWindow = memo(function ChatWindow({
   onClose,
@@ -22,7 +24,8 @@ const ChatWindow = memo(function ChatWindow({
   config,
 }) {
   const [isFullscreen, setIsFullscreen] = useState(false);
-  
+  const [isFocused, setIsFocused] = useState(false);
+
   const {
     messages,
     input,
@@ -50,22 +53,24 @@ const ChatWindow = memo(function ChatWindow({
       elevation={8}
       sx={{
         position: "fixed",
-        ...(isFullscreen ? {
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          width: "100vw",
-          height: "100vh",
-          borderRadius: 0,
-        } : {
-          bottom: 20,
-          right: 20,
-          left: { xs: 10, sm: "auto" },
-          width: configValues.windowSize.width,
-          height: configValues.windowSize.height,
-          borderRadius: configValues.borderRadius,
-        }),
+        ...(isFullscreen
+          ? {
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              width: "100vw",
+              height: "100vh",
+              borderRadius: 0,
+            }
+          : {
+              bottom: 20,
+              right: 20,
+              left: { xs: 10, sm: "auto" },
+              width: configValues.windowSize.width,
+              height: configValues.windowSize.height,
+              borderRadius: configValues.borderRadius,
+            }),
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
@@ -87,15 +92,14 @@ const ChatWindow = memo(function ChatWindow({
         >
           <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
             <Avatar
+              src={logo}
+              alt="Bot Logo"
               sx={{
-                bgcolor: "rgba(255,255,255,0.2)",
+                bgcolor: "white",
                 width: 32,
                 height: 32,
-                fontSize: "1.2rem",
               }}
-            >
-              {configValues.botAvatar}
-            </Avatar>
+            />
             <Box>
               <Typography
                 variant="subtitle1"
@@ -106,13 +110,13 @@ const ChatWindow = memo(function ChatWindow({
               {sessionId && (
                 <Typography
                   variant="caption"
-                  sx={{ 
-                    opacity: 0.8, 
+                  sx={{
+                    opacity: 0.8,
                     fontSize: "0.75rem",
-                    display: "block"
+                    display: "block",
                   }}
                 >
-                  Session: {sessionId.split('_')[1]?.substring(0, 8)}...
+                  Session: {sessionId.split("_")[1]?.substring(0, 8)}...
                 </Typography>
               )}
             </Box>
@@ -159,7 +163,7 @@ const ChatWindow = memo(function ChatWindow({
         sx={{
           flex: 1,
           overflowY: "auto",
-          bgcolor: "#E5E4E2",
+          bgcolor: "#ffffff",
           "&::-webkit-scrollbar": { width: "6px" },
           "&::-webkit-scrollbar-thumb": {
             borderRadius: "10px",
@@ -172,7 +176,9 @@ const ChatWindow = memo(function ChatWindow({
               key={messageKeys[i] || `${msg.sender}-${i}`}
               msg={msg}
               botAvatar={configValues.botAvatar}
+              botLogo={logo}
               userAvatar={configValues.userAvatar}
+              userLogo={userAvatar}
               config={config}
             />
           ))}
@@ -184,7 +190,7 @@ const ChatWindow = memo(function ChatWindow({
 
           {/* Loading fallback UI */}
           {loading && !hasFirstChunk && (
-            <LoadingIndicator botAvatar={configValues.botAvatar} />
+            <LoadingIndicator botAvatar={configValues.botAvatar} botLogo={logo} />
           )}
         </Box>
         <div ref={messagesEndRef} />
@@ -196,44 +202,61 @@ const ChatWindow = memo(function ChatWindow({
       {!isInputDisabled ? (
         <Box
           sx={{
-            display: "flex",
-            p: 2,
-            alignItems: "flex-end",
-            gap: 1.5,
+            p: 0.5,
+            boxShadow: isFocused ? "0px -4px 12px rgba(0, 0, 0, 0.1)" : "none",
+            transition: "box-shadow 0.3s ease",
           }}
         >
-          <TextareaAutosize
-            minRows={1}
-            maxRows={4}
-            placeholder={configValues.placeholder}
-            value={input}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyDown}
-            style={{
-              flex: 1,
-              borderRadius: "20px",
-              padding: "12px 16px",
-              border: "2px solid #e0e0e0",
-              resize: "none",
-              outline: "none",
-              fontSize: "14px",
-              fontFamily: configValues.fontFamily,
-            }}
-          />
-          <IconButton
-            onClick={handleSendClick}
-            disabled={!input.trim() || loading}
+          <Box
             sx={{
-              bgcolor: "primary.main",
-              color: "white",
-              width: 44,
-              height: 44,
-              "&:hover": { bgcolor: "primary.dark", transform: "scale(1.05)" },
-              "&:disabled": { bgcolor: "grey.300", color: "grey.500" },
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              bgcolor: "#f5f5f5",
+              borderRadius: "28px",
+              padding: "6px 8px 6px 16px",
             }}
           >
-            <ICONS.SEND fontSize="small" />
-          </IconButton>
+            {/* Text Input */}
+            <TextareaAutosize
+              minRows={1}
+              maxRows={4}
+              placeholder={configValues.placeholder}
+              value={input}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyDown}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              style={{
+                flex: 1,
+                border: "none",
+                background: "transparent",
+                resize: "none",
+                outline: "none",
+                fontSize: "14px",
+                fontFamily: configValues.fontFamily,
+                padding: "8px 4px",
+                lineHeight: "1.5",
+              }}
+            />
+
+            {/* Send Button */}
+            <IconButton
+              onClick={handleSendClick}
+              disabled={!input.trim() || loading}
+              sx={{
+                color: "primary.main",
+                "&:hover": {
+                  bgcolor: "transparent",
+                },
+                "&:disabled": {
+                  color: "#9e9e9e",
+                },
+              }}
+            >
+              <ICONS.SEND fontSize="small" />
+            </IconButton>
+          </Box>
         </Box>
       ) : (
         <Box
@@ -244,7 +267,8 @@ const ChatWindow = memo(function ChatWindow({
           }}
         >
           <Typography variant="body2" color="text.secondary">
-            Thank you for your interest! Please send your resume to the email address provided.
+            Thank you for your interest! Please send your resume to the email
+            address provided.
           </Typography>
         </Box>
       )}
